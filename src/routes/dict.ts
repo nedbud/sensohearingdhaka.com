@@ -15,30 +15,26 @@
  * exactly the site we have today.
  */
 import { dict, type Lang } from "@/lib/i18n";
-
-const BASE = (process.env.NEXT_PUBLIC_BASE_URL ?? "").replace(/\/+$/, "");
-const HOUR = 3600;
+import { CACHE, getData } from "@/routes/cms";
 
 export type Dict = ReturnType<typeof dict>;
 
 type Entry = { bn: string | null; en: string | null; list?: boolean };
 
 async function fetchCopy(): Promise<Record<string, Entry>> {
-  if (!BASE) return {};
-  try {
-    const res = await fetch(`${BASE}/api/senso/site-copy`, { next: { revalidate: HOUR } });
-    if (!res.ok) return {};
-    if (!(res.headers.get("content-type") ?? "").includes("application/json")) return {};
+  const groups = await getData<Record<string, Record<string, Entry>>>(
+    "/api/senso/site-copy",
+    CACHE.EDITED
+  );
+  if (!groups) return {};
 
-    const json = (await res.json()) as { data?: Record<string, Record<string, Entry>> };
-    const flat: Record<string, Entry> = {};
-    for (const group of Object.values(json.data ?? {})) {
-      for (const [key, entry] of Object.entries(group)) flat[key] = entry;
-    }
-    return flat;
-  } catch {
-    return {};
+  // The API groups rows for the editing screen's benefit; the overlay below
+  // wants one flat map from dotted key to value.
+  const flat: Record<string, Entry> = {};
+  for (const group of Object.values(groups)) {
+    for (const [key, entry] of Object.entries(group)) flat[key] = entry;
   }
+  return flat;
 }
 
 /**

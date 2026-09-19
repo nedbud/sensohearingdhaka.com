@@ -3,7 +3,7 @@
 import type { Clinic } from "@/routes/clinic";
 import type { Lang } from "@/lib/i18n";
 import type { Dict } from "@/routes/dict";
-import AskNaatiButton from "@/components/naati/AskNaatiButton";
+import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import SocialLinks from "@/components/ui/SocialLinks";
 
 /**
@@ -50,7 +50,7 @@ export default function VisitSection({ lang, clinic,
         </div>
 
         <div className="grid gap-2.5 border-t border-line p-4 sm:grid-cols-2">
-          <AskNaatiButton lang={lang} className="w-full" />
+          <WhatsAppButton lang={lang} clinic={clinic} d={d} className="w-full" />
           <a
             href={clinic.address.mapsUrl}
             target="_blank"

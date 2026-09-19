@@ -10,6 +10,7 @@ import { listHref, clearNeed, toNeed, type ListState } from "@/lib/listUrl";
 import { toBengaliDigits } from "@/lib/site";
 import { lines, type Lang } from "@/lib/i18n";
 import type { Dict } from "@/routes/dict";
+import { taxonomy } from "@/routes/taxonomy";
 
 /**
  * The way into the catalogue.
@@ -67,6 +68,7 @@ export default function NeedPicker({
   pool: Device[];
 }) {
   const BUDGETS = budgets(d.picker.budgets);
+  const t = taxonomy(d);
 
   /**
    * How many devices each option would leave, given the answers already
@@ -164,7 +166,7 @@ export default function NeedPicker({
       <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <Row
           label={d.picker.lossLabel}
-          hint={state.loss ? LOSS_FEELS[state.loss][lang] : d.picker.lossHint}
+          hint={state.loss ? t.feels[state.loss] : d.picker.lossHint}
         >
           {LOSS_STEPS.map((level) => (
             <Choice
@@ -172,7 +174,7 @@ export default function NeedPicker({
               on={state.loss === level}
               patch={{ loss: state.loss === level ? undefined : level }}
             >
-              {LOSS_LABEL[level][lang]}
+              {t.loss[level]}
             </Choice>
           ))}
         </Row>

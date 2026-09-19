@@ -11,49 +11,37 @@
  */
 import { FAQ as FALLBACK, type FaqItem } from "@/lib/faq";
 import type { Lang } from "@/lib/i18n";
-
-const BASE = (process.env.NEXT_PUBLIC_BASE_URL ?? "").replace(/\/+$/, "");
-const HOUR = 3600;
+import { CACHE, getData, say, type Pair } from "@/routes/cms";
 
 interface FaqApi {
   id: number;
-  question: { bn: string | null; en: string | null };
-  answer: { bn: string | null; en: string | null };
+  question: Pair;
+  answer: Pair;
   roman: string | null;
 }
 
 export async function getFaq(lang: Lang): Promise<FaqItem[]> {
-  if (!BASE) return [...FALLBACK[lang]];
+  const rows = await getData<FaqApi[]>("/api/senso/faqs", CACHE.EDITED);
+  if (!rows) return [...FALLBACK[lang]];
 
-  try {
-    const res = await fetch(`${BASE}/api/senso/faqs`, { next: { revalidate: HOUR } });
-    if (!res.ok) return [...FALLBACK[lang]];
-    if (!(res.headers.get("content-type") ?? "").includes("application/json")) {
-      return [...FALLBACK[lang]];
-    }
+  const items = rows
+    .map((row) => {
+      // A question written in one language only is still worth showing — it is
+      // the answer that matters, and a missing translation should not silently
+      // drop the question from the page. `say` falls back to the other
+      // language for exactly this.
+      const question = say(row.question, lang);
+      const answer = say(row.answer, lang);
+      if (!question || !answer) return null;
 
-    const json = (await res.json()) as { data?: FaqApi[] };
-    const rows = json?.data ?? [];
+      const item: FaqItem = { question, answer };
+      // Assigned only when present: `roman: undefined` and no roman key at all
+      // are the same thing to a reader and different things to the type, and
+      // the optional property is the honest shape.
+      if (row.roman) item.roman = row.roman;
+      return item;
+    })
+    .filter((x): x is FaqItem => x !== null);
 
-    const items = rows
-      .map((row) => {
-        // A question written in one language only is still worth showing — it
-        // is the answer that matters, and a missing translation should not
-        // silently drop the question from the page.
-        const question = row.question?.[lang]?.trim() || row.question?.[lang === "bn" ? "en" : "bn"]?.trim();
-        const answer = row.answer?.[lang]?.trim() || row.answer?.[lang === "bn" ? "en" : "bn"]?.trim();
-        if (!question || !answer) return null;
-        const item: FaqItem = { question, answer };
-        // Assigned only when present: `roman: undefined` and no roman key at
-        // all are the same thing to a reader and different things to the
-        // type, and the optional property is the honest shape.
-        if (row.roman) item.roman = row.roman;
-        return item;
-      })
-      .filter((x): x is FaqItem => x !== null);
-
-    return items.length ? items : [...FALLBACK[lang]];
-  } catch {
-    return [...FALLBACK[lang]];
-  }
+  return items.length ? items : [...FALLBACK[lang]];
 }

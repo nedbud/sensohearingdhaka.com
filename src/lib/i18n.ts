@@ -38,6 +38,9 @@ export const t = {
       products: "কানের মেশিন",
       tests: "কান পরীক্ষা",
       service: "সার্ভিস",
+      accessories: "যন্ত্রাংশ",
+      gallery: "গ্যালারি",
+      sections: "এই পাতার অংশ",
       about: "আমরা কারা",
       visit: "কোথায় আসবেন",
       call: "ফোন করুন",
@@ -302,6 +305,62 @@ export const t = {
       scaleNote: "এই মেশিনটি {from} থেকে {to} মাত্রার শ্রবণক্ষয়ের জন্য।",
     },
 
+    /** The three doors under the hero: what a visitor came for. */
+    doors: {
+      aidsTitle: "কানের মেশিন",
+      aidsNote: "{count}টি মডেল, প্রতিটির দাম লেখা",
+      testsTitle: "কান পরীক্ষা",
+      testsNote: "{minutes} মিনিটে রিপোর্ট, ফি {fee}",
+      serviceTitle: "সার্ভিস",
+      serviceNote: "নিজস্ব ল্যাবে, সাধারণত {days} দিনে",
+    },
+
+    /**
+     * The words the catalogue uses about a device: how much loss it covers,
+     * where it sits in the ear, what moving up the range actually buys.
+     *
+     * These were lookup tables in src/lib/catalogue.ts — the last prose on the
+     * site that only a developer could change, and prose that appears on all
+     * 109 product pages at once.
+     */
+    taxonomy: {
+      loss_mild: "সামান্য",
+      loss_moderate: "মাঝারি",
+      loss_severe: "বেশি",
+      loss_profound: "খুব বেশি",
+      feels_mild: "শান্ত ঘরে কথা বুঝতে অসুবিধা হয় না, কিন্তু ভিড়ে বা দূর থেকে কথা ধরতে কষ্ট হয়।",
+      feels_moderate: "টিভির শব্দ বাড়াতে হয়, আর বারবার “কী বললেন” জিজ্ঞেস করতে হয়।",
+      feels_severe: "মুখোমুখি কথাও ঠিকমতো বোঝা যায় না, ফোনে কথা বলা কঠিন।",
+      feels_profound: "জোরে বলা কথাও ধরা যায় না — বেশি ক্ষমতার মেশিন লাগে।",
+      tier_entry: "শুরুর সারি",
+      tier_mid: "মাঝারি সারি",
+      tier_premium: "উপরের সারি",
+      means_entry: "শান্ত জায়গায় ও এক-দুইজনের সাথে কথা বলার জন্য যথেষ্ট। ভিড়ের মধ্যে সীমাবদ্ধতা বেশি।",
+      means_mid: "ভিড়ের মধ্যে কথা আলাদা করে ধরার ক্ষমতা ভালো। বেশিরভাগ মানুষের জন্য এটাই যথেষ্ট।",
+      means_premium: "বাজার, বিয়েবাড়ি বা রেস্টুরেন্টের মতো কঠিন জায়গায় সবচেয়ে ভালো কাজ করে — যদিও কোনো মেশিনই সেখানে স্বাভাবিক কানের সমান নয়।",
+      form_rie_short: "কানের পেছনে, ভেতরে স্পিকার",
+      form_rie_long: "মূল অংশটা কানের পেছনে থাকে, আর যেটা শব্দ তৈরি করে সেটা সরু তার দিয়ে কানের ভেতরে বসে। সবচেয়ে বেশি মানুষ এটাই নেন — বাইরে থেকে প্রায় দেখা যায় না, আর শব্দ স্বাভাবিক লাগে।",
+      form_bte_short: "কানের পেছনে, টিউব দিয়ে",
+      form_bte_long: "পুরোটাই কানের পেছনে বসে, আর ইয়ার মোল্ডের সাথে টিউব দিয়ে যুক্ত থাকে। বেশি ক্ষমতা দিতে পারে, তাই কম শোনার মাত্রা বেশি হলে এটাই লাগে। হাতে ধরতেও সুবিধা।",
+      form_cic_short: "কানের ভেতরে, দেখা যায় না",
+      form_cic_long: "পুরো মেশিনটা কানের ভেতরে বসে যায়, বাইরে থেকে দেখা যায় না। তবে ছোট বলে ক্ষমতা কম, আর হাতে কাঁপুনি থাকলে খুলতে-পরতে অসুবিধা হতে পারে।",
+      form_itc_short: "কানের ভেতরে",
+      form_itc_long: "কানের ভেতরে বসে, CIC-এর চেয়ে একটু বড় — তাই ব্যাটারি বেশি চলে আর ধরতে সুবিধা।",
+      form_iic_short: "কানের গভীরে, একেবারেই দেখা যায় না",
+      form_iic_long: "CIC-এর চেয়েও ভেতরে বসে — বাইরে থেকে একেবারেই চোখে পড়ে না। সবচেয়ে ছোট বলে ক্ষমতাও সবচেয়ে কম, আর প্রতিটি কানের ছাঁচ অনুযায়ী আলাদা করে বানাতে হয়।",
+      form_ite_short: "কানের ভেতরে, পূর্ণ",
+      form_ite_long: "কানের বাইরের অংশ জুড়ে বসে। ধরতে সবচেয়ে সুবিধা, আর ব্যাটারিও বেশি চলে।",
+      // "{from} থেকে {to}" — how two degrees of loss are joined into a range.
+      lossRange: "{from} থেকে {to}",
+    },
+
+    notFound: {
+      title: "এই পাতাটা নেই",
+      lede: "লিংকটা পুরনো হতে পারে, অথবা ঠিকানায় ছোট একটা ভুল। নিচের যেকোনোটা দিয়ে শুরু করুন — অথবা হোয়াটসঅ্যাপে লিখুন, আমরা খুঁজে দিচ্ছি।",
+      home: "হোমে ফিরে যান",
+      alt: "সেনসো হিয়ারিং সেন্টার — পাতাটি পাওয়া যায়নি",
+    },
+
     band: {
       testToReport: "পরীক্ষা থেকে রিপোর্ট",
       warranty: "ওয়ারেন্টি",
@@ -344,6 +403,9 @@ export const t = {
       products: "Hearing aids",
       tests: "Hearing tests",
       service: "Service",
+      accessories: "Accessories",
+      gallery: "Gallery",
+      sections: "Menu",
       about: "About us",
       visit: "Find us",
       call: "Call us",
@@ -566,6 +628,61 @@ export const t = {
       tryQ: "Can I hear it before buying?",
       tryAnswer: "Yes. We programme it to your audiogram and you wear it in the centre. Do note that once sold a device is not taken back, so take your time in that sitting and ask everything you want to ask.",
       scaleNote: "Fitted for {from} to {to} hearing loss.",
+    },
+
+    doors: {
+      aidsTitle: "Hearing aids",
+      aidsNote: "{count} models, every price published",
+      testsTitle: "Hearing tests",
+      testsNote: "The report in {minutes} minutes, {fee}",
+      serviceTitle: "Service",
+      serviceNote: "In our own lab, usually within {days} day",
+    },
+
+    /**
+     * The words the catalogue uses about a device: how much loss it covers,
+     * where it sits in the ear, what moving up the range actually buys.
+     *
+     * These were lookup tables in src/lib/catalogue.ts — the last prose on the
+     * site that only a developer could change, and prose that appears on all
+     * 109 product pages at once.
+     */
+    taxonomy: {
+      loss_mild: "mild",
+      loss_moderate: "moderate",
+      loss_severe: "severe",
+      loss_profound: "profound",
+      feels_mild: "Conversation is fine in a quiet room, but hard in a crowd or from across it.",
+      feels_moderate: "The television goes up, and you find yourself asking people to repeat themselves.",
+      feels_severe: "Even face-to-face talk is hard to follow, and the phone is difficult.",
+      feels_profound: "Even raised voices do not come through — this needs the most powerful devices.",
+      tier_entry: "Entry",
+      tier_mid: "Mid range",
+      tier_premium: "Premium",
+      means_entry: "Enough for quiet rooms and one or two people. More limited once there is background noise.",
+      means_mid: "Noticeably better at separating a voice from background noise. Enough for most people.",
+      means_premium: "Handles the hardest rooms best — markets, weddings, restaurants — though no device matches a normal ear there.",
+      form_rie_short: "Behind the ear, speaker inside",
+      form_rie_long: "The body sits behind the ear and the speaker sits inside the canal on a thin wire. This is what most people end up with — it is barely visible and it sounds the most natural.",
+      form_bte_short: "Behind the ear, with tubing",
+      form_bte_long: "The whole device sits behind the ear and connects to an ear mould through tubing. It delivers the most power, so it is what more severe loss needs — and it is the easiest to handle.",
+      form_cic_short: "In the canal, hidden",
+      form_cic_long: "The device sits entirely inside the canal and cannot be seen. Being small it has less power, and it can be fiddly if your hands are unsteady.",
+      form_itc_short: "In the canal",
+      form_itc_long: "Sits in the canal, a little larger than a CIC — so the battery lasts longer and it is easier to handle.",
+      form_iic_short: "Deep in the canal, invisible",
+      form_iic_long: "Sits deeper than a CIC and cannot be seen at all. Being the smallest it also has the least power, and each one is built to a mould of your own ear.",
+      form_ite_short: "In the ear, full shell",
+      form_ite_long: "Fills the outer bowl of the ear. The easiest of the in-ear styles to handle, with the longest battery life.",
+      // "{from} থেকে {to}" — how two degrees of loss are joined into a range.
+      lossRange: "{from} to {to}",
+    },
+
+    notFound: {
+      title: "This page is not here",
+      lede: "The link may be an old one, or there may be a small mistake in the address. Start from any of these — or write to us on WhatsApp and we will find it for you.",
+      home: "Back to the home page",
+      alt: "Senso Hearing Centre — page not found",
     },
 
     band: {

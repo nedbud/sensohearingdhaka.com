@@ -6,6 +6,7 @@ import type { Clinic } from "@/routes/clinic";
 import type { Part } from "@/routes/details";
 import { fill, type Lang } from "@/lib/i18n";
 import type { Dict } from "@/routes/dict";
+import { taxonomy } from "@/routes/taxonomy";
 import {
   toDevice,
   devicesOnly,
@@ -21,7 +22,7 @@ import {
   FaqJsonLd,
   BreadcrumbJsonLd,
 } from "@/components/ui/JsonLd";
-import AskNaatiButton from "@/components/naati/AskNaatiButton";
+import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import { CheckIcon } from "@/components/ui/Icons";
 import LossScale from "@/components/product/LossScale";
 import RelatedDevices from "@/components/product/RelatedDevices";
@@ -82,6 +83,7 @@ export default function ProductView({
   /** A figure in the reader's own numerals. Used wherever a template has a
    *  {placeholder} standing in for one. */
   const num = (v: number | string) => (bn ? toBengaliDigits(v) : String(v));
+  const tax = taxonomy(d);
 
   const T = (key: string, bnText: string, enText: string) =>
     say(copy, key, lang, { bn: bnText, en: enText });
@@ -331,8 +333,8 @@ export default function ProductView({
             ? bn
               ? `${toBengaliDigits(device.fittingRange.from)}–${toBengaliDigits(device.fittingRange.to)} dB`
               : `${device.fittingRange.from}–${device.fittingRange.to} dB`
-            : lossRangeLabel(device, lang),
-          note: lossRangeLabel(device, lang),
+            : tax.range(device),
+          note: tax.range(device),
         },
     device.channels
       ? {
@@ -357,12 +359,12 @@ export default function ProductView({
     ...(product.version
       ? [{ label: T("spec.model", "মডেল", "Model"), value: product.version }]
       : []),
-    { label: T("spec.range_label", "সারি", "Range"), value: TIER_LABEL[device.tier][lang] },
+    { label: T("spec.range_label", "সারি", "Range"), value: tax.tierLabel[device.tier] },
     ...(device.formFactor
       ? [
           {
             label: T("spec.style", "গড়ন", "Style"),
-            value: isCros ? crosShort : FORM_FACTOR[device.formFactor].short[lang],
+            value: isCros ? crosShort : tax.form[device.formFactor].short,
           },
         ]
       : []),
@@ -379,7 +381,7 @@ export default function ProductView({
             from: num(device.fittingRange.from),
             to: num(device.fittingRange.to),
           })
-        : lossRangeLabel(device, lang),
+        : tax.range(device),
     },
     ...(device.rechargeable !== undefined
       ? [
@@ -608,7 +610,7 @@ export default function ProductView({
                   {isCros
                     ? crosShort
                     : device.formFactor
-                    ? FORM_FACTOR[device.formFactor].short[lang]
+                    ? tax.form[device.formFactor].short
                     : product.series}
                 </span>
                 <span aria-hidden="true" className="hidden text-ink-muted sm:inline">
@@ -625,8 +627,10 @@ export default function ProductView({
               </p>
 
               <div className="mt-5 flex flex-wrap gap-2.5">
-                <AskNaatiButton
+                <WhatsAppButton
                   lang={lang}
+                  clinic={clinic}
+                  d={d}
                   seed={fill(d.wa.product, { name: device.title })}
                 />
                 <Link
@@ -796,10 +800,10 @@ export default function ProductView({
                       <span className="mt-[9px] h-2 w-2 shrink-0 rounded-full bg-brand" />
                       <p className="text-base leading-relaxed text-ink-2">
                         <span className="font-ui font-semibold text-ink">
-                          {LOSS_LABEL[level][lang]}
+                          {tax.loss[level]}
                           {bn ? " — " : ": "}
                         </span>
-                        {LOSS_FEELS[level][lang]}
+                        {tax.feels[level]}
                       </p>
                     </li>
                   ))}
@@ -992,8 +996,10 @@ export default function ProductView({
                 )}
               </p>
               <div className="mt-6 grid max-w-lg gap-2.5 sm:grid-cols-2">
-                <AskNaatiButton
+                <WhatsAppButton
                   lang={lang}
+                  clinic={clinic}
+                  d={d}
                   seed={fill(d.wa.product, { name: device.title })}
                 />
               </div>

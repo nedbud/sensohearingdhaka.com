@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import ProductView from "@/components/views/ProductView";
 import { getProduct, getProducts, getProductsOrFail } from "@/routes/product";
-import { getCopy } from "@/routes/siteCopy";
-import { getClinic } from "@/routes/clinic";
 import { getDict } from "@/routes/dict";
-import { getDetails } from "@/routes/details";
+import { getSite } from "@/routes/site";
 import { formatTaka, altLanguages } from "@/lib/site";
 import { fill } from "@/lib/i18n";
 
@@ -58,14 +56,12 @@ export default async function Page({ params }: Props) {
   // The product page shows nearby devices, so it needs the catalogue as
   // well as the product. Both fetches are revalidated hourly and the list
   // is the same one every other page asks for, so this is one cache read.
-  const [res, catalogue, copy, clinic, d, details] = await Promise.all([
+  const [site, res, catalogue] = await Promise.all([
+    getSite("bn"),
     getProduct(params.slug),
     getProducts(),
-    getCopy(),
-    getClinic(),
-    getDict("bn"),
-    getDetails(),
   ]);
+  const { clinic, d, details, copy } = site;
   return (
     <ProductView
       clinic={clinic}

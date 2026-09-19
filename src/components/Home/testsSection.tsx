@@ -3,7 +3,7 @@ import { fill, type Lang } from "@/lib/i18n";
 import type { Dict } from "@/routes/dict";
 import type { Clinic } from "@/routes/clinic";
 import { say, type Part, type Test } from "@/routes/details";
-import AskNaatiButton from "@/components/naati/AskNaatiButton";
+import WhatsAppButton from "@/components/ui/WhatsAppButton";
 
 /**
  * Fixed fees, published.
@@ -104,8 +104,10 @@ export default function TestsSection({
       )}
 
       <div className="mt-6">
-        <AskNaatiButton
+        <WhatsAppButton
           lang={lang}
+          clinic={clinic}
+          d={d}
           seed={d.wa.prescription}
           label={d.tests.prescriptionCta}
         />

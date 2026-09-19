@@ -1,5 +1,6 @@
 import { LOSS_LABEL, type Device, type LossLevel } from "@/lib/catalogue";
 import { fill, type Lang } from "@/lib/i18n";
+import { taxonomy } from "@/routes/taxonomy";
 import type { Dict } from "@/routes/dict";
 
 const ORDER: LossLevel[] = ["mild", "moderate", "severe", "profound"];
@@ -22,6 +23,7 @@ export default function LossScale({
   lang: Lang;
   d: Dict;
 }) {
+  const t = taxonomy(d);
   const from = ORDER.indexOf(device.lossFrom);
   const to = ORDER.indexOf(device.lossTo);
 
@@ -52,15 +54,15 @@ export default function LossScale({
                 active ? "font-medium text-ink" : "text-ink-muted"
               }`}
             >
-              {LOSS_LABEL[level][lang]}
+              {t.loss[level]}
             </p>
           );
         })}
       </div>
       <p className="sr-only">
         {fill(d.deviceFaq.scaleNote, {
-          from: LOSS_LABEL[device.lossFrom][lang],
-          to: LOSS_LABEL[device.lossTo][lang],
+          from: t.loss[device.lossFrom],
+          to: t.loss[device.lossTo],
         })}
       </p>
     </div>

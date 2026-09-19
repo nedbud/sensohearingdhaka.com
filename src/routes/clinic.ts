@@ -19,11 +19,7 @@
  *   what to show stays in the component, where it can be read.
  */
 import { SITE } from "@/lib/site";
-
-const BASE = (process.env.NEXT_PUBLIC_BASE_URL ?? "").replace(/\/+$/, "");
-const HOUR = 3600;
-
-type Pair = { en: string | null; bn: string | null };
+import { CACHE, getData, pick, type Pair } from "@/routes/cms";
 
 interface CompanyApi {
   name?: Pair;
@@ -61,13 +57,6 @@ interface CompanyApi {
   outside_dhaka?: Record<string, number | string | null>;
 }
 
-/** A value from the CMS, or the one the code shipped with. Blank counts as absent. */
-const pick = <T,>(fromCms: T | null | undefined, fallback: T): T => {
-  if (fromCms === null || fromCms === undefined) return fallback;
-  if (typeof fromCms === "string" && !fromCms.trim()) return fallback;
-  if (Array.isArray(fromCms) && fromCms.length === 0) return fallback;
-  return fromCms;
-};
 
 /**
  * SITE is declared `as const`, so its type is the exact values it was written
@@ -93,20 +82,6 @@ type Widen<T> = T extends readonly (infer U)[]
 
 export type Clinic = Widen<typeof SITE>;
 
-async function fetchCompany(): Promise<CompanyApi | null> {
-  if (!BASE) return null;
-  try {
-    const res = await fetch(`${BASE}/api/senso/company`, { next: { revalidate: HOUR } });
-    if (!res.ok) return null;
-    if (!(res.headers.get("content-type") ?? "").includes("application/json")) return null;
-    const json = (await res.json()) as { data?: CompanyApi };
-    return json?.data ?? null;
-  } catch {
-    // Silent and empty on purpose: the caller's fallback is a complete site,
-    // not a degraded one.
-    return null;
-  }
-}
 
 /**
  * A mutable copy of the constant, once per call. SITE's arrays are readonly —
@@ -120,7 +95,7 @@ const baseClinic = (): Clinic => JSON.parse(JSON.stringify(SITE)) as Clinic;
 
 export async function getClinic(): Promise<Clinic> {
   const base = baseClinic();
-  const c = await fetchCompany();
+  const c = await getData<CompanyApi>("/api/senso/company", CACHE.EDITED);
   if (!c) return base;
 
   const phones = (c.phones ?? []).filter((p) => p.number);

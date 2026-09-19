@@ -3,7 +3,7 @@ import ProductList from "@/components/HearingAids/List";
 import FilterBar from "@/components/HearingAids/FilterBar";
 import Pagination from "@/components/HearingAids/Pagination";
 import NeedPicker from "@/components/HearingAids/NeedPicker";
-import { ProductRangeJsonLd } from "@/components/ui/JsonLd";
+import { BreadcrumbJsonLd, ProductRangeJsonLd } from "@/components/ui/JsonLd";
 import {
   getProductsBySeries,
   getSeries,
@@ -19,8 +19,8 @@ import {
   type ListState,
 } from "@/lib/listUrl";
 import { fill, type Lang } from "@/lib/i18n";
-import { getDict } from "@/routes/dict";
-import { formatTaka, toBengaliDigits } from "@/lib/site";
+import { getSite } from "@/routes/site";
+import { SITE, formatTaka, toBengaliDigits } from "@/lib/site";
 
 const SORTS: SortKey[] = ["best", "trending", "leatest", "asc", "desc"];
 
@@ -45,7 +45,7 @@ export default async function ProductsView({
   };
 }) {
   const bn = lang === "bn";
-  const d = await getDict(lang);
+  const { d } = await getSite(lang);
 
   const parsed = parseListState(searchParams);
   const state: ListState = {
@@ -90,6 +90,16 @@ export default async function ProductsView({
       {stats && (
         <ProductRangeJsonLd low={stats.low} high={stats.high} count={stats.count} />
       )}
+
+      {/* So the result reads "sensohearingdhaka.com › Hearing aids" rather
+          than the bare URL. The product pages have had this since the SEO
+          pass; the two pages above them in the tree had not. */}
+      <BreadcrumbJsonLd
+        items={[
+          { name: d.nav.home, url: `${SITE.url}${lang === "en" ? "/en" : "/"}` },
+          { name: title, url: `${SITE.url}${lang === "en" ? "/en" : ""}/hearing-aids` },
+        ]}
+      />
 
       {/* ── Header band ──────────────────────────────────────────────── */}
       <header className="border-b border-line bg-paper-2">

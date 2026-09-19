@@ -13,11 +13,7 @@
  */
 import { TEAM, TESTS, PARTS } from "@/lib/site";
 import type { Lang } from "@/lib/i18n";
-
-const BASE = (process.env.NEXT_PUBLIC_BASE_URL ?? "").replace(/\/+$/, "");
-const HOUR = 3600;
-
-type Pair = { bn: string | null; en: string | null };
+import { CACHE, getData, say as sayPair, type Pair } from "@/routes/cms";
 
 export type Member = {
   name: Pair;
@@ -43,10 +39,8 @@ export type Part = {
 
 export type Details = { team: Member[]; tests: Test[]; parts: Part[] };
 
-/** One side of a pair, with the other language as the fallback. Blank counts
- *  as absent, so a row half-translated still renders rather than showing a gap. */
-export const say = (pair: Pair, lang: Lang): string =>
-  (pair[lang] ?? "").trim() || (pair[lang === "bn" ? "en" : "bn"] ?? "").trim();
+/** Re-exported so components reach for one `say`, not two with the same name. */
+export const say = (pair: Pair, lang: Lang): string => sayPair(pair, lang);
 
 /**
  * What the code shipped with, in the shape the API returns, so the merge below
@@ -121,25 +115,13 @@ interface DetailsApi {
   parts?: { name: Pair; price: number | null; price_high: number | null; unit: Pair }[];
 }
 
-async function fetchDetails(): Promise<DetailsApi | null> {
-  if (!BASE) return null;
-  try {
-    const res = await fetch(`${BASE}/api/senso/clinic-details`, { next: { revalidate: HOUR } });
-    if (!res.ok) return null;
-    if (!(res.headers.get("content-type") ?? "").includes("application/json")) return null;
-    const json = (await res.json()) as { data?: DetailsApi };
-    return json?.data ?? null;
-  } catch {
-    return null;
-  }
-}
 
 const named = (pair: Pair | undefined): boolean =>
   Boolean((pair?.bn ?? "").trim() || (pair?.en ?? "").trim());
 
 export async function getDetails(): Promise<Details> {
   const base = fallback();
-  const api = await fetchDetails();
+  const api = await getData<DetailsApi>("/api/senso/clinic-details", CACHE.EDITED);
   if (!api) return base;
 
   // A list arrives whole or not at all. Merging row by row would mean a

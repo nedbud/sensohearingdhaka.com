@@ -3,6 +3,7 @@ import Image from "next/image";
 import { formatTaka } from "@/lib/site";
 import { type Lang } from "@/lib/i18n";
 import type { Dict } from "@/routes/dict";
+import { taxonomy } from "@/routes/taxonomy";
 import { toDevice, lossRangeLabel, FORM_FACTOR } from "@/lib/catalogue";
 import type { ProductMapInterface } from "@/routes/product";
 
@@ -31,6 +32,7 @@ export default function ProductCard({
   priority?: boolean;
 }) {
   const bn = lang === "bn";
+  const t = taxonomy(dict);
   const href = `${lang === "en" ? "/en" : ""}/hearing-aids/${item.slug}`;
   const image =
     item.image && item.image.length > 50
@@ -62,11 +64,11 @@ export default function ProductCard({
         </p>
         {!d.isAccessory && (
           <p className="mt-0.5 text-sm leading-snug text-ink-2">
-            {lossRangeLabel(d, lang)}
+            {t.range(d)}
             {dict.catalogue.lossSuffix}
             {d.formFactor && (
               <span className="hidden text-ink-muted sm:block">
-                {FORM_FACTOR[d.formFactor].short[lang]}
+                {t.form[d.formFactor].short}
               </span>
             )}
           </p>
