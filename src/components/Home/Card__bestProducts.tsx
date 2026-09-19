@@ -44,6 +44,7 @@ export default function ProductCard({
   return (
     <Link
       href={href}
+      prefetch={false}
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-paper-surface transition-all hover:-translate-y-0.5 hover:border-ink-2 hover:shadow-[0_10px_28px_-18px_rgba(34,31,27,0.45)]"
     >
       <div className="relative aspect-square w-full bg-paper-2">

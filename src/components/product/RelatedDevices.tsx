@@ -201,6 +201,7 @@ export default function RelatedDevices({
               key={d.slug}
               data-card
               href={`${prefix}/hearing-aids/${d.slug}`}
+              prefetch={false}
               className="group flex w-[210px] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-line bg-paper-surface transition hover:border-ink-2 hover:shadow-sm sm:w-[232px]"
             >
               <div className="relative aspect-[4/3] w-full bg-paper-2">
