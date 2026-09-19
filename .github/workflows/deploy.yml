@@ -32,6 +32,9 @@ env:
   # a given image is visible in that run's log, which is the only way to answer
   # "which CMS was this build talking to?" after the fact.
   PUBLIC_BASE_URL: https://cms.sensohearingdhaka.com
+  # The GA4 measurement ID. Public by definition - it is in the page source -
+  # so it belongs here beside the CMS URL rather than in the secret store.
+  PUBLIC_GTM: G-4723X9PHXN
 
 jobs:
   build:
@@ -66,6 +69,7 @@ jobs:
           push: true
           build-args: |
             NEXT_PUBLIC_BASE_URL=${{ env.PUBLIC_BASE_URL }}
+            NEXT_PUBLIC_GTM=${{ env.PUBLIC_GTM }}
           tags: |
             ${{ env.IMAGE }}:${{ github.sha }}
             ${{ env.IMAGE }}:latest

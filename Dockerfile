@@ -26,6 +26,14 @@ COPY . .
 # wrong host.
 ARG NEXT_PUBLIC_BASE_URL
 ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
+
+# Same reason: the measurement ID is substituted at build time. It sat in
+# .env with a real ID in it and was passed to nothing, so every production
+# image so far has shipped with analytics switched off while looking
+# configured.
+ARG NEXT_PUBLIC_GTM
+ENV NEXT_PUBLIC_GTM=$NEXT_PUBLIC_GTM
+
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # The build fetches the product list and the site copy from the CMS in order to

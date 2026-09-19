@@ -19,8 +19,7 @@
  * product pages at all. A one-character configuration mistake took the whole
  * catalogue off the site without a single error in the build log.
  */
-const BASE = (process.env.NEXT_PUBLIC_BASE_URL ?? "").replace(/\/+$/, "");
-const HOUR = 3600;
+import { BASE, CACHE, getJson } from "@/routes/cms";
 
 export interface ProductMapInterface {
   id?: number;
@@ -68,32 +67,6 @@ export interface getBestProductsInterface {
 
 type ApiList = { data?: ProductMapInterface[] };
 
-async function getJson<T>(url: string, revalidate = HOUR): Promise<T | null> {
-  try {
-    const res = await fetch(url, { next: { revalidate } });
-    if (!res.ok) {
-      warn(`${url} -> HTTP ${res.status}`);
-      return null;
-    }
-    // An HTML login page parses as neither JSON nor an error until you try to
-    // read it, so the content type is checked first and reported by name.
-    const type = res.headers.get("content-type") ?? "";
-    if (!type.includes("json")) {
-      warn(`${url} -> ${type || "unknown content type"}, expected JSON`);
-      return null;
-    }
-    return (await res.json()) as T;
-  } catch (e) {
-    // A dead API must not take the whole page down — the phone number, the
-    // address and the opening hours still need to render.
-    warn(`${url} -> ${e instanceof Error ? e.message : String(e)}`);
-    return null;
-  }
-}
-
-function warn(message: string) {
-  console.warn(`[senso api] ${message}`);
-}
 
 /**
  * Called from `generateStaticParams`. An empty catalogue there is not a
@@ -115,13 +88,13 @@ export async function getProductsOrFail(): Promise<ProductMapInterface[]> {
 
 export async function getBestProducts(): Promise<ProductMapInterface[]> {
   const json = await getJson<ApiList>(
-    `${BASE}/api/senso/products/list?best=true`
+    "/api/senso/products/list?best=true"
   );
   return json?.data ?? [];
 }
 
 export async function getProducts(): Promise<ProductMapInterface[]> {
-  const json = await getJson<ApiList>(`${BASE}/api/senso/products/list`);
+  const json = await getJson<ApiList>("/api/senso/products/list");
   return json?.data ?? [];
 }
 
@@ -184,7 +157,7 @@ export async function getProductsBySeries(opts: {
       sort: "desc",
     });
     const json = await getJson<ApiList>(
-      `${BASE}/api/senso/products/series?${params.toString()}`
+      `/api/senso/products/series?${params.toString()}`
     );
     return json?.data ?? [];
   }
@@ -256,7 +229,7 @@ export interface ProductInterface {
 
 export async function getProduct(slug: string) {
   return getJson<{ data: ProductInterface["product"] }>(
-    `${BASE}/api/senso/products/seo/${slug}`
+    `/api/senso/products/seo/${slug}`
   );
 }
 
@@ -266,8 +239,8 @@ export interface SeriesInterface {
 
 export async function getSeries(): Promise<{ id?: number; name: string }[]> {
   const json = await getJson<{ data?: { id?: number; name: string }[] }>(
-    `${BASE}/api/senso/series/select`,
-    HOUR * 24
+    "/api/senso/series/select",
+    CACHE.RARE
   );
   return json?.data ?? [];
 }

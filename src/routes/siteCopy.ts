@@ -19,9 +19,8 @@
  *   page silently falls back to the code's copy, which looks like nothing
  *   happened — so keys are added, not renamed.
  */
-
-const BASE = (process.env.NEXT_PUBLIC_BASE_URL ?? "").replace(/\/+$/, "");
-const HOUR = 3600;
+import { CACHE, getData } from "@/routes/cms";
+import type { Lang } from "@/lib/i18n";
 
 export type CopyEntry = { bn: string | null; en: string | null; list?: boolean };
 export type CopyBook = Record<string, Record<string, CopyEntry>>;
@@ -30,27 +29,16 @@ export type CopyBook = Record<string, Record<string, CopyEntry>>;
 export type Copy = Record<string, CopyEntry>;
 
 export async function getCopy(): Promise<Copy> {
-  if (!BASE) return {};
-  try {
-    const res = await fetch(`${BASE}/api/senso/site-copy`, { next: { revalidate: HOUR } });
-    if (!res.ok) return {};
-    const type = res.headers.get("content-type") ?? "";
-    if (!type.includes("application/json")) return {};
+  const groups = await getData<CopyBook>("/api/senso/site-copy", CACHE.EDITED);
+  if (!groups) return {};
 
-    const json = (await res.json()) as { data?: CopyBook };
-    const flat: Copy = {};
-    for (const group of Object.values(json.data ?? {})) {
-      for (const [key, entry] of Object.entries(group)) flat[key] = entry;
-    }
-    return flat;
-  } catch {
-    // Deliberately silent and deliberately empty: the caller's fallback is a
-    // complete site, not a degraded one.
-    return {};
+  const flat: Copy = {};
+  for (const group of Object.values(groups)) {
+    for (const [key, entry] of Object.entries(group)) flat[key] = entry;
   }
+  return flat;
 }
 
-type Lang = "bn" | "en";
 
 /**
  * One string. `fallback` is what the page said before this table existed, and

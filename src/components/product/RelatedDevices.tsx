@@ -7,6 +7,7 @@ import { formatTaka } from "@/lib/site";
 import { lossRangeLabel, type Device } from "@/lib/catalogue";
 import type { Lang } from "@/lib/i18n";
 import type { Dict } from "@/routes/dict";
+import { taxonomy } from "@/routes/taxonomy";
 
 /**
  * Other devices worth looking at, as a carousel.
@@ -42,6 +43,7 @@ export default function RelatedDevices({
   lang: Lang;
   dict: Dict;
 }) {
+  const t = taxonomy(dict);
   const pool = all.filter((d) => d.slug !== current.slug);
   const distance = (d: Device) => Math.abs(d.priceValue - current.priceValue);
 
@@ -218,7 +220,7 @@ export default function RelatedDevices({
                   {d.title}
                 </p>
                 <p className="mt-1 text-xs leading-snug text-ink-2">
-                  {lossRangeLabel(d, lang)}
+                  {t.range(d)}
                   {dict.catalogue.lossSuffix}
                 </p>
                 <p className="num mt-auto pt-3 font-ui text-lg font-bold text-ink">

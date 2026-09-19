@@ -8,7 +8,7 @@
  * in properly, move the values back here.
  */
 
-const BASE = process.env.NEXT_PUBLIC_BASE_URL;
+import { CACHE, getData } from "@/routes/cms";
 
 export interface CompanySettings {
   name: string;
@@ -19,16 +19,7 @@ export interface CompanySettings {
 }
 
 export async function getCompanySettings(): Promise<CompanySettings | null> {
-  try {
-    const res = await fetch(`${BASE}/api/senso/company-settings/1`, {
-      next: { revalidate: 86400 },
-    });
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json?.data ?? null;
-  } catch {
-    return null;
-  }
+  return getData<CompanySettings>("/api/senso/company-settings/1", CACHE.RARE);
 }
 
 export interface CompanyAbout {
@@ -40,16 +31,7 @@ export interface CompanyAbout {
 }
 
 export async function getCompanyAbout(): Promise<CompanyAbout[]> {
-  try {
-    const res = await fetch(`${BASE}/api/senso/company-abouts/select`, {
-      next: { revalidate: 86400 },
-    });
-    if (!res.ok) return [];
-    const json = await res.json();
-    return json?.data ?? [];
-  } catch {
-    return [];
-  }
+  return (await getData<CompanyAbout[]>("/api/senso/company-abouts/select", CACHE.RARE)) ?? [];
 }
 
 /** Kept for the About components, which import this name. */

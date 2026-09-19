@@ -3,11 +3,10 @@ import Navbar from "@/components/partials/navbar";
 import Footer from "@/components/partials/footer";
 import { ClinicJsonLd } from "@/components/ui/JsonLd";
 import StickyContactBar from "@/components/ui/StickyContactBar";
+import Analytics from "@/components/ui/Analytics";
 // import NaatiWidget from "@/components/naati/NaatiWidget";
 import type { Lang } from "@/lib/i18n";
-import { getClinic } from "@/routes/clinic";
-import { getDict } from "@/routes/dict";
-import { getDetails } from "@/routes/details";
+import { getSite } from "@/routes/site";
 
 /**
  * The document shell, shared by both root layouts.
@@ -40,11 +39,7 @@ export default async function RootShell({
   // alternative is each component fetching for itself, which is the same data
   // four times and four chances for two parts of one page to disagree about
   // the phone number.
-  const [clinic, d, details] = await Promise.all([
-    getClinic(),
-    getDict(lang),
-    getDetails(),
-  ]);
+  const { clinic, d, details } = await getSite(lang);
 
   return (
     <html lang={lang}>
@@ -62,8 +57,9 @@ export default async function RootShell({
           href="/font/anek-semi-600-bengali.woff2" />
       </head>
       <body suppressHydrationWarning>
+        <Analytics />
         <ClinicJsonLd clinic={clinic} tests={details.tests} />
-        <Navbar lang={lang} d={d} />
+        <Navbar lang={lang} clinic={clinic} d={d} />
         <main>{children}</main>
         <Footer lang={lang} clinic={clinic} d={d} />
         {/*

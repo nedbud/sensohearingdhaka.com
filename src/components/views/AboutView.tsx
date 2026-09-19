@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { toBengaliDigits } from "@/lib/site";
 import { clockLabel, fill, lines, titled, type Lang } from "@/lib/i18n";
-import { getClinic } from "@/routes/clinic";
-import { getDict } from "@/routes/dict";
-import { getDetails, say } from "@/routes/details";
+import { say } from "@/routes/details";
+import { getSite } from "@/routes/site";
 import AudiogramMark from "@/components/ui/AudiogramMark";
-import AskNaatiButton from "@/components/naati/AskNaatiButton";
+import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
+import WhatsAppButton from "@/components/ui/WhatsAppButton";
 
 /**
  * The one page here that is read rather than scanned, so it is the one page
@@ -19,11 +19,7 @@ import AskNaatiButton from "@/components/naati/AskNaatiButton";
  */
 
 export default async function AboutView({ lang }: { lang: Lang }) {
-  const [clinic, details, d] = await Promise.all([
-    getClinic(),
-    getDetails(),
-    getDict(lang),
-  ]);
+  const { clinic, details, d } = await getSite(lang);
   const bn = lang === "bn";
   const FOUNDED = clinic.foundedYear;
   const years = new Date().getFullYear() - FOUNDED;
@@ -53,6 +49,16 @@ export default async function AboutView({ lang }: { lang: Lang }) {
 
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: d.nav.home, url: `${clinic.url}${lang === "en" ? "/en" : "/"}` },
+          {
+            name: d.about.eyebrow,
+            url: `${clinic.url}${lang === "en" ? "/en" : ""}/about-us`,
+          },
+        ]}
+      />
+
       {/* ── Opening ─────────────────────────────────────────────── */}
       <section className="relative overflow-hidden border-b border-line">
         <AudiogramMark className="pointer-events-none absolute -right-32 top-6 h-[340px] w-[620px] text-line-strong opacity-50 sm:-right-10 sm:h-[420px] sm:w-[760px]" />
@@ -185,10 +191,10 @@ export default async function AboutView({ lang }: { lang: Lang }) {
 
           <figure className="mt-8">
             <Image
-              src="/assets/Images/temp/Business_Excellence_award_2019.jpeg"
+              src="/assets/Images/photos/business-excellence-award-2019.webp"
               alt={d.about.awardCaption}
-              width={900}
-              height={800}
+              width={768}
+              height={512}
               className="h-auto w-full max-w-sm rounded-xl border border-white/10 object-cover"
             />
             <figcaption className="mt-2 text-sm text-white/50">
@@ -241,10 +247,7 @@ export default async function AboutView({ lang }: { lang: Lang }) {
           </p>
 
           <div className="mt-6 grid gap-2.5 sm:grid-cols-2">
-            <AskNaatiButton
-              lang={lang}
-              label={d.about.naatiCta}
-            />
+            <WhatsAppButton lang={lang} clinic={clinic} d={d} />
           </div>
 
           <a

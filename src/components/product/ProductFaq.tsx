@@ -2,6 +2,7 @@ import { FORM_FACTOR, LOSS_LABEL, TIER_MEANS, type Device } from "@/lib/catalogu
 import { formatTaka, toBengaliDigits } from "@/lib/site";
 import { fill, type Lang } from "@/lib/i18n";
 import type { Dict } from "@/routes/dict";
+import { taxonomy } from "@/routes/taxonomy";
 import type { Clinic } from "@/routes/clinic";
 import { say, type Part } from "@/routes/details";
 
@@ -23,6 +24,7 @@ export function productFaq(
 ) {
   const bn = lang === "bn";
   const n = (v: number | string) => (bn ? toBengaliDigits(v) : String(v));
+  const tax = taxonomy(dict);
   const items: { question: string; answer: string }[] = [];
 
   // The battery line names whatever the panel has first in the parts list,
@@ -36,9 +38,9 @@ export function productFaq(
 
   const values = {
     name: d.title,
-    from: LOSS_LABEL[d.lossFrom][lang],
-    to: LOSS_LABEL[d.lossTo][lang],
-    tier: TIER_MEANS[d.tier][lang],
+    from: tax.loss[d.lossFrom],
+    to: tax.loss[d.lossTo],
+    tier: tax.tierMeans[d.tier],
     price: formatTaka(d.priceValue),
     months: n(clinic.warranty.followUpMonths),
     years: n(clinic.warranty.years),
@@ -60,7 +62,7 @@ export function productFaq(
   if (d.formFactor) {
     items.push({
       question: dict.deviceFaq.fitQ,
-      answer: FORM_FACTOR[d.formFactor].long[lang],
+      answer: tax.form[d.formFactor].long,
     });
   }
 

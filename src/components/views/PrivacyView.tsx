@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { lines, type Lang } from "@/lib/i18n";
-import { getClinic, telFor } from "@/routes/clinic";
-import { getDict } from "@/routes/dict";
+import { telFor } from "@/routes/clinic";
+import { getSite } from "@/routes/site";
 
 /**
  * The privacy notice.
@@ -48,7 +48,7 @@ function sections(body: string): Block[] {
 }
 
 export default async function PrivacyView({ lang }: { lang: Lang }) {
-  const [clinic, d] = await Promise.all([getClinic(), getDict(lang)]);
+  const { clinic, d } = await getSite(lang);
   const bn = lang === "bn";
   const c = d.privacy;
   const blocks = sections(c.body);
