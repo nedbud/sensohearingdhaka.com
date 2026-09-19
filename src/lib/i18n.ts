@@ -53,7 +53,7 @@ export const t = {
       // hearing loss to seeking help is 4-10 years, and most people who
       // have not acted believe their loss is only mild. Naming the delay
       // turns guilt into permission.
-      title: "কানে কম শুনছেন?",
+      title: "কানে কম শুনছেন? পরীক্ষা করে দেখুন",
       // {minutes} is the assessment time from the clinic record, so the
       // sentence and the fee table cannot drift apart.
       lede: "শুরুটা হোক একটা পরীক্ষা দিয়ে। {minutes} মিনিট, তারপর রিপোর্ট হাতে। মেশিন নেওয়ার সিদ্ধান্ত তার পরে।",
@@ -260,12 +260,12 @@ export const t = {
      * {n}, {name}, {price} and {page} are filled at render.
      */
     seo: {
-      defaultTitle: "কানের মেশিনের দাম ও কান পরীক্ষা — সেনসো হিয়ারিং সেন্টার, পান্থপথ",
+      defaultTitle: "কানের মেশিনের দাম ও কান পরীক্ষা — সেনসো, পান্থপথ",
       defaultDescription: "পান্থপথ, ঢাকা। ReSound-এর অনুমোদিত ডিলার। কানের মেশিনের দাম খোলাখুলি লেখা, কান পরীক্ষার রিপোর্ট ৩৫ মিনিটে।",
       ogTitle: "কানের মেশিনের দাম ও কান পরীক্ষা — সেনসো হিয়ারিং সেন্টার",
       ogDescription: "দাম খোলাখুলি লেখা। কান পরীক্ষায় ৩৫ মিনিট, রিপোর্ট একই দিনে। ReSound-এর অনুমোদিত ডিলার।",
       ogImageAlt: "Senso Hearing Centre, Panthapath — ২০০৭ সাল থেকে ২০ হাজার রোগীর সেবায়",
-      homeTitle: "কানের মেশিনের দাম ও কান পরীক্ষা — সেনসো হিয়ারিং সেন্টার, পান্থপথ",
+      homeTitle: "কানের মেশিনের দাম ও কান পরীক্ষা — সেনসো, পান্থপথ",
       homeDescription: "পান্থপথ, ঢাকা। ReSound-এর অনুমোদিত ডিলার। প্রতিটি মেশিনের দাম ওয়েবসাইটেই লেখা। পূর্ণ কান পরীক্ষা ৩৫ মিনিটে, রিপোর্ট একই দিনে।",
       aboutTitle: "আমরা কারা — সেনসো হিয়ারিং সেন্টার, পান্থপথ",
       aboutDescription: "পান্থপথে ২০০৭ সাল থেকে। ReSound-এর অনুমোদিত ডিলার। অডিওলজিস্ট কে কখন বসেন, কী কী করা হয়, আর কী করা হয় না।",
@@ -415,7 +415,7 @@ export const t = {
     hero: {
       eyebrow:
         "Panthapath, Dhaka · Authorised ReSound dealer in Bangladesh",
-      title: "Not hearing well?",
+      title: "Not hearing well? Start with a test",
       lede: "Start with a hearing test. {minutes} minutes, and the report is in your hand. Whether to buy anything comes after that.",
       phoneShort: "If the phone is hard, write instead — it is for most of our patients.",
       deviceAlt: "A ReSound OMNIA 461 hearing aid — the body sits behind the ear, the speaker inside the canal on a thin wire",
@@ -594,12 +594,12 @@ export const t = {
     },
 
     seo: {
-      defaultTitle: "Hearing aid prices and hearing tests — Senso Hearing Centre, Panthapath",
+      defaultTitle: "Hearing aid prices and hearing tests — Senso, Panthapath",
       defaultDescription: "Panthapath, Dhaka. An authorised ReSound dealer. Every device's price is published, and a full hearing test takes 35 minutes.",
       ogTitle: "Hearing aid prices and hearing tests — Senso Hearing Centre",
       ogDescription: "Prices published. A full hearing test in 35 minutes, report the same day. An authorised ReSound dealer.",
       ogImageAlt: "Senso Hearing Centre, Panthapath — serving 20,000 patients since 2007",
-      homeTitle: "Hearing aid prices and hearing tests — Senso Hearing Centre, Panthapath",
+      homeTitle: "Hearing aid prices and hearing tests — Senso, Panthapath",
       homeDescription: "Panthapath, Dhaka. An authorised ReSound dealer. Every device's price is on the site. A full hearing assessment takes 35 minutes and the report is the same day.",
       aboutTitle: "About us — Senso Hearing Centre, Panthapath",
       aboutDescription: "In Panthapath since 2007. An authorised ReSound dealer. Who sits when, what happens here, and what we do not do.",
