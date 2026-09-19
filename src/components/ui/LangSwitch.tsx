@@ -50,6 +50,7 @@ export default function LangSwitch({ lang }: { lang: Lang }) {
     <div className="flex overflow-hidden rounded-full border-[1.5px] border-line-strong bg-paper-surface">
       <Link
         href={bnPath}
+        prefetch={false}
         onClick={carryQuery(bnPath)}
         className={item(!onEnglish)}
         hrefLang="bn"
@@ -59,6 +60,7 @@ export default function LangSwitch({ lang }: { lang: Lang }) {
       </Link>
       <Link
         href={enPath}
+        prefetch={false}
         onClick={carryQuery(enPath)}
         className={item(onEnglish)}
         hrefLang="en"

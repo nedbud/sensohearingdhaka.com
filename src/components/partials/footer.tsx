@@ -61,6 +61,7 @@ export default function Footer({ lang, clinic,
               notice needs, and more than it usually gets. */}
           <Link
             href={bn ? "/gopaniyota" : "/en/privacy"}
+            prefetch={false}
             className="block pt-1 text-ink-2 underline hover:text-brand"
           >
             {d.social.privacy}
