@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { toBengaliDigits } from "@/lib/site";
 import { fill, type Lang } from "@/lib/i18n";
 import type { Dict } from "@/routes/dict";
 import type { Clinic } from "@/routes/clinic";
@@ -52,7 +53,14 @@ export default function HeroSlider({
   const many = slides.length > 1;
 
   const prefix = lang === "en" ? "/en" : "";
-  const minutes = clinic.testPackage.minutes;
+  // Bangla numerals in Bangla prose. The figure comes from the clinic record
+  // as a plain number, and the live page read "শুরুটা হোক একটা পরীক্ষা দিয়ে।
+  // 35 মিনিট" — Western digits in a Bangla sentence, directly above a number
+  // band setting ৩৫ correctly. Same mistake as the trust band, one file over.
+  const minutes =
+    lang === "bn"
+      ? toBengaliDigits(clinic.testPackage.minutes)
+      : String(clinic.testPackage.minutes);
 
   const go = useCallback(
     (to: number) => {

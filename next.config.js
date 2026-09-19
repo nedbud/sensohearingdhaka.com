@@ -6,6 +6,46 @@ const nextConfig = {
   // megabytes and one of about a hundred, on every deploy and every rollback.
   output: "standalone",
 
+  /**
+   * Next announces itself in an `X-Powered-By: Next.js` header on every
+   * response. It tells a visitor nothing and tells someone scanning for known
+   * Next vulnerabilities exactly which stack to try — and an SEO audit flags
+   * it, correctly, as a header that should not be there.
+   */
+  poweredByHeader: false,
+
+  /**
+   * Cache headers for everything the browser should not ask for twice.
+   *
+   * `/_next/static` is content-hashed — the filename changes when the file
+   * changes — so it can be immutable for a year without ever going stale. The
+   * images under /assets are not hashed, so they get a day and a
+   * revalidation rather than a year: a replaced product photograph has to be
+   * able to reach people who have already visited.
+   */
+  async headers() {
+    return [
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
+        source: "/assets/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" },
+        ],
+      },
+      {
+        source: "/font/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+    ];
+  },
+
   experimental: {
     serverActions: true,
   },

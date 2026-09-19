@@ -54,7 +54,19 @@ export async function generateMetadata(): Promise<Metadata> {
       ],
     },
     twitter: { card: "summary_large_image" },
-    icons: { icon: "/favicon.ico", shortcut: "/favicon.ico", apple: "/favicon.ico" },
+    /*
+      No `icons` here on purpose.
+
+      App Router's file convention wins over metadata.icons the moment
+      src/app/favicon.ico exists — which it does — so the apple entry declared
+      here was silently ignored and the rendered head carried one line:
+      <link rel="icon" href="/favicon.ico">. iOS had no home-screen icon, and
+      the audit was right to say none was declared.
+
+      src/app/apple-icon.png is the convention's answer. Next hashes it,
+      serves it, and writes the apple-touch-icon link itself — one file, no
+      configuration, and no second place for the two to disagree.
+    */
     manifest: "/manifest.webmanifest",
     category: "Hearing care",
   };
