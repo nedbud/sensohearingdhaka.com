@@ -2,6 +2,7 @@ import Link from "next/link";
 import { lines, type Lang } from "@/lib/i18n";
 import { telFor } from "@/routes/clinic";
 import { getSite } from "@/routes/site";
+import { cityLine } from "@/lib/site";
 
 /**
  * The privacy notice.
@@ -95,9 +96,7 @@ export default async function PrivacyView({ lang }: { lang: Lang }) {
             </p>
             <p className="max-w-prose leading-relaxed">
               {bn ? clinic.address.lineBn : clinic.address.line},{" "}
-              {bn
-                ? `${clinic.address.cityBn}-${clinic.address.postcode}`
-                : `${clinic.address.city}-${clinic.address.postcode}`}
+              {cityLine(clinic.address, lang)}
             </p>
           </div>
         </section>

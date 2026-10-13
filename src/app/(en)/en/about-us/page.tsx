@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import AboutView from "@/components/views/AboutView";
-import { altLanguages, SITE } from "@/lib/site";
+import { altLanguages } from "@/lib/site";
 import { getDict } from "@/routes/dict";
+import { pageOpenGraph } from "@/lib/seo";
 
 export const revalidate = 86400;
 
@@ -14,11 +15,10 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: "/en/about-us",
       languages: altLanguages("/about-us", "/en/about-us"),
     },
-    openGraph: {
+    openGraph: await pageOpenGraph("en", d, {
       title: d.seo.aboutOgTitle,
-      url: `${SITE.url}/en/about-us`,
-      locale: "en_US",
-    },
+      path: "/en/about-us",
+    }),
   };
 }
 

@@ -4,6 +4,7 @@ import { type Clinic, telFor } from "@/routes/clinic";
 import type { Lang } from "@/lib/i18n";
 import type { Dict } from "@/routes/dict";
 import SocialLinks from "@/components/ui/SocialLinks";
+import { cityLine } from "@/lib/site";
 
 export default function Footer({ lang, clinic,
   d,
@@ -26,9 +27,7 @@ export default function Footer({ lang, clinic,
           <p className="text-ink-2">
             {bn ? clinic.address.lineBn : clinic.address.line}
             <br />
-            {bn
-              ? `${clinic.address.cityBn}-${clinic.address.postcode}`
-              : `${clinic.address.city}-${clinic.address.postcode}`}
+            {cityLine(clinic.address, lang)}
             <br />
             <span className="text-sm text-ink-muted">
               {bn ? clinic.address.landmarkBn : clinic.address.landmark}

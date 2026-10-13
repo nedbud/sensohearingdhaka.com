@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
       {
         error: "rate_limited",
         message:
-          "একটু বেশি হয়ে যাচ্ছে। একটু পরে আবার লিখুন, অথবা সরাসরি ফোন করুন ০১৩২২-৯২৬২৯৭।",
+          `একটু বেশি হয়ে যাচ্ছে। একটু পরে আবার লিখুন, অথবা সরাসরি ফোন করুন ${senso.contact.phone.bn}।`,
       },
       { status: 429 }
     );
@@ -259,8 +259,8 @@ export async function POST(request: NextRequest) {
           : {}),
         message:
           lang === "bn"
-            ? "দুঃখিত, এই মুহূর্তে আমি উত্তর দিতে পারছি না। সরাসরি ফোন করুন ০১৩২২-৯২৬২৯৭ — পান্থপথ সিগনাল, আর্টিসান সেন্টার, ৪র্থ তলা।"
-            : "Sorry — I can't answer right now. Please call 01322-926297. We're at Artisan Center, 4th floor, Panthapath Signal.",
+            ? `দুঃখিত, এই মুহূর্তে আমি উত্তর দিতে পারছি না। সরাসরি ফোন করুন ${senso.contact.phone.bn} — পান্থপথ সিগনাল, আর্টিসান সেন্টার, ৪র্থ তলা।`
+            : `Sorry — I can't answer right now. Please call ${senso.contact.phone.en}. We're at Artisan Center, 4th floor, Panthapath Signal.`,
       },
       { status: status >= 500 ? 502 : status }
     );

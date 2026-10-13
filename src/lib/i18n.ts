@@ -243,6 +243,10 @@ export const t = {
       hours: "শনি – বৃহস্পতি, সকাল ১০টা – রাত ৮টা। শুক্রবার ও সরকারি ছুটিতে বন্ধ।",
       waitNote: "সিরিয়াল নিয়ে এলে ভালো — সিরিয়াল ছাড়া গড়ে ২ ঘণ্টা পর্যন্ত অপেক্ষা করতে হতে পারে। ঢাকার বাইরে থেকে এলে সকাল ১০টার মধ্যে পৌঁছালে এক দিনেই সব শেষ হয়ে যায় (৩–৪ ঘণ্টা)।",
       messengerNote: "ফেসবুকেও মেসেজ করতে পারেন — দিনের বেশিরভাগ সময় আমরা সেখানেই থাকি।",
+      // The pictures under the address. Dhaka addresses point at a street,
+      // not a door — the signboard is what people actually navigate by.
+      findingHeading: "কীভাবে আসবেন",
+      findingNote: "ঠিকানা মিলিয়েও অনেকে ভবনটা খুঁজে পান না। সাইনবোর্ড দেখে এলে সবচেয়ে সহজ — নিচের ছবিগুলোই পথ।",
     },
 
     social: {
@@ -385,6 +389,13 @@ export const t = {
       langLabel: "English",
       map: "ম্যাপে দেখুন",
       verify: "ReSound-এর নিজের তালিকায় দেখুন",
+      // The photo viewer. {index} and {total} are filled with the reader's
+      // own numerals, so a Bangla page never counts in Western digits.
+      enlarge: "বড় করে দেখুন",
+      close: "বন্ধ করুন",
+      previous: "আগেরটা",
+      next: "পরেরটা",
+      photoOf: "{index} / {total}",
     },
 
     wa: {
@@ -584,6 +595,8 @@ export const t = {
       hours: "Saturday – Thursday, 10 AM – 8 PM. Closed Friday and government holidays.",
       waitNote: "Book ahead if you can — without an appointment the wait averages up to two hours. Coming from outside Dhaka, arrive by 10 AM and it can all be done in one day (three to four hours).",
       messengerNote: "You can message us on Facebook too — that is where we are most of the day.",
+      findingHeading: "Finding the door",
+      findingNote: "The address points at a street, not a door. The signboard is the easiest thing to look for — these four pictures are the way in.",
     },
 
     social: {
@@ -709,6 +722,11 @@ export const t = {
       langLabel: "বাংলা",
       map: "Open in Maps",
       verify: "See us on ReSound's own listing",
+      enlarge: "View larger",
+      close: "Close",
+      previous: "Previous",
+      next: "Next",
+      photoOf: "{index} of {total}",
     },
 
     wa: {

@@ -1,4 +1,5 @@
 import type { Tenant } from "../engine/types";
+import { SITE, phoneText } from "@/lib/site";
 import { sensoKnowledge } from "./senso.knowledge";
 
 /**
@@ -114,9 +115,14 @@ normal. Read it and start the conversation for them.
     "appointment is confirmed",
   ],
 
+  contact: {
+    phone: { bn: phoneText("bn"), en: phoneText("en") },
+    whatsapp: SITE.whatsapp,
+  },
+
   handover: {
-    bn: "এই মুহূর্তে সিরিয়ালটা আমি বসাতে পারলাম না — তাই কিছু নিশ্চিত করে বলছি না, ভুল বলার চেয়ে না বলা ভালো।\n\nফোন করুন ০১৩২২-৯২৬২৯৭, অথবা ওই নম্বরেই হোয়াটসঅ্যাপে লিখুন। বলবেন কান পরীক্ষার সিরিয়াল লাগবে, আর কবে কখন আসতে চান। ওরা সঙ্গে সঙ্গে বসিয়ে দেবে।",
-    en: "I couldn't put the booking through just now — so I won't tell you it's done, because it isn't.\n\nCall 01322-926297, or message that same number on WhatsApp. Say you need a serial for a hearing test and when you'd like to come, and they'll put you in.",
+    bn: `এই মুহূর্তে সিরিয়ালটা আমি বসাতে পারলাম না — তাই কিছু নিশ্চিত করে বলছি না, ভুল বলার চেয়ে না বলা ভালো।\n\nফোন করুন ${phoneText("bn")}, অথবা ওই নম্বরেই হোয়াটসঅ্যাপে লিখুন। বলবেন কান পরীক্ষার সিরিয়াল লাগবে, আর কবে কখন আসতে চান। ওরা সঙ্গে সঙ্গে বসিয়ে দেবে।`,
+    en: `I couldn't put the booking through just now — so I won't tell you it's done, because it isn't.\n\nCall ${phoneText("en")}, or message that same number on WhatsApp. Say you need a serial for a hearing test and when you'd like to come, and they'll put you in.`,
   },
 
   toneMarkers: {

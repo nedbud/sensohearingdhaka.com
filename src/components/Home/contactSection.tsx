@@ -1,4 +1,4 @@
-import { SITE } from "@/lib/site";
+import { SITE, cityLine } from "@/lib/site";
 import { dict, type Lang } from "@/lib/i18n";
 import AskNaatiButton from "@/components/naati/AskNaatiButton";
 
@@ -46,9 +46,7 @@ export default function Contact({ lang }: { lang: Lang }) {
         </p>
         <p>
           {bn ? SITE.address.lineBn : SITE.address.line},{" "}
-          {bn
-            ? `${SITE.address.cityBn}-${SITE.address.postcode}`
-            : `${SITE.address.city}-${SITE.address.postcode}`}
+          {cityLine(SITE.address, lang)}
           <br />
           <span className="text-ink-muted">
             {bn ? SITE.address.landmarkBn : SITE.address.landmark}
