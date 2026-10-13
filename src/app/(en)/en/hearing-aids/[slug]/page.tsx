@@ -5,6 +5,7 @@ import { getDict } from "@/routes/dict";
 import { getSite } from "@/routes/site";
 import { formatTaka, altLanguages } from "@/lib/site";
 import { fill } from "@/lib/i18n";
+import { pageOpenGraph } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -39,13 +40,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         `/en/hearing-aids/${params.slug}`
       ),
     },
-    openGraph: {
-      type: "website",
-      locale: "en_US",
+    openGraph: await pageOpenGraph("en", d, {
       title: display,
       description: product.description?.slice(0, 300),
+      path: `/en/hearing-aids/${params.slug}`,
       images: product.avatar ? [{ url: product.avatar }] : undefined,
-    },
+    }),
   };
 }
 

@@ -68,6 +68,16 @@ export type Tenant = {
    */
   neverClaims: string[];
 
+  /**
+   * How this business is reached when the assistant gives up.
+   *
+   * On the tenant and not in the engine rules, where Senso's number used to
+   * sit inside a string that calls itself clinic-independent. The printed
+   * form differs by language — Bangla pages print Bengali digits — so both
+   * are carried rather than converted at the point of use.
+   */
+  contact: { phone: Bilingual; whatsapp: string };
+
   /** Said instead, when it does. */
   handover: Bilingual;
 

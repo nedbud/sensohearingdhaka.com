@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { toBengaliDigits } from "@/lib/site";
+import { cityLine, toBengaliDigits } from "@/lib/site";
 import { clockLabel, fill, lines, titled, type Lang } from "@/lib/i18n";
 import { say } from "@/routes/details";
 import { getSite } from "@/routes/site";
@@ -233,9 +233,7 @@ export default async function AboutView({ lang }: { lang: Lang }) {
           <p className="mt-4 text-lg leading-snug text-ink">
             {bn ? clinic.address.lineBn : clinic.address.line}
             <br />
-            {bn
-              ? `${clinic.address.cityBn}-${clinic.address.postcode}`
-              : `${clinic.address.city}-${clinic.address.postcode}`}
+            {cityLine(clinic.address, lang)}
           </p>
           <p className="mt-1.5 text-base text-ink-muted">
             {bn ? clinic.address.landmarkBn : clinic.address.landmark}

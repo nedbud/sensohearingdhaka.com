@@ -26,6 +26,7 @@ import { getClinic, type Clinic } from "@/routes/clinic";
 import { getDict, type Dict } from "@/routes/dict";
 import { getDetails, type Details } from "@/routes/details";
 import { getSlides, type Slide } from "@/routes/slides";
+import { getVisitPhotos, type VisitPhoto } from "@/routes/visit";
 import { getCopy, type Copy } from "@/routes/siteCopy";
 
 export type Site = {
@@ -38,6 +39,8 @@ export type Site = {
   details: Details;
   /** The home page's slider. */
   slides: Slide[];
+  /** The street, the footpath, the lift, the desk — how to find the door. */
+  photos: VisitPhoto[];
   /**
    * The product pages' own copy book, keyed by dotted string.
    *
@@ -49,13 +52,14 @@ export type Site = {
 };
 
 export async function getSite(lang: Lang): Promise<Site> {
-  const [clinic, d, details, slides, copy] = await Promise.all([
+  const [clinic, d, details, slides, photos, copy] = await Promise.all([
     getClinic(),
     getDict(lang),
     getDetails(),
     getSlides(),
+    getVisitPhotos(),
     getCopy(),
   ]);
 
-  return { lang, clinic, d, details, slides, copy };
+  return { lang, clinic, d, details, slides, photos, copy };
 }

@@ -60,8 +60,16 @@ export async function composeSystemPrompt(tenant: Tenant, lang: Lang): Promise<s
       ? "Reply in Bangla — চলিত বাংলা, আপনি. If the visitor writes in English or Banglish, reply in the language they used."
       : "Reply in English. If the visitor writes in Bangla or Banglish, switch to Bangla (চলিত, আপনি) and stay there.";
 
+  /**
+   * The rules are clinic-independent, so the one number in them is a token.
+   * It used to be Senso's number, typed into a string whose own comment said
+   * it was independent of which clinic — which would have put Senso's phone
+   * in the second clinic's prompt.
+   */
+  const rules = ENGINE_RULES.replace(/\{\{PHONE\}\}/g, tenant.contact.phone[lang]);
+
   return [
-    ENGINE_RULES,
+    rules,
     "",
     "# Who you are, here",
     tenant.persona.trim(),

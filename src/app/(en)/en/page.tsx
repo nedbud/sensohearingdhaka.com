@@ -2,6 +2,7 @@ import { altLanguages } from "@/lib/site";
 import type { Metadata } from "next";
 import HomeView from "@/components/views/HomeView";
 import { getDict } from "@/routes/dict";
+import { pageOpenGraph } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -14,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: "/en",
       languages: altLanguages("/", "/en"),
     },
-    openGraph: { locale: "en_US" },
+    openGraph: await pageOpenGraph("en", d),
   };
 }
 

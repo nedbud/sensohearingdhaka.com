@@ -17,7 +17,7 @@ import { getFaq } from "@/routes/faq";
 const FAQ_ON_HOME = 6;
 
 export default async function HomeView({ lang }: { lang: Lang }) {
-  const [{ clinic, d, details, slides }, best, all, faq] = await Promise.all([
+  const [{ clinic, d, details, slides, photos }, best, all, faq] = await Promise.all([
     getSite(lang),
     getBestProducts(),
     getProducts(),
@@ -57,7 +57,7 @@ export default async function HomeView({ lang }: { lang: Lang }) {
         parts={details.parts}
       />
       <TrustBand lang={lang} clinic={clinic} d={d} team={details.team} />
-      <VisitSection lang={lang} clinic={clinic} d={d} />
+      <VisitSection lang={lang} clinic={clinic} d={d} photos={photos} />
       <FaqSection lang={lang} d={d} items={faq.slice(0, FAQ_ON_HOME)} />
     </>
   );

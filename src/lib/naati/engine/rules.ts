@@ -141,7 +141,7 @@ If the test is for someone under 18:
 Some people would rather talk to a person, and older callers often would. Do
 not push. Give the number and what to say:
 
-  "ফোন করুন ০১৩২২-৯২৬২৯৭, অথবা ওই নম্বরেই হোয়াটসঅ্যাপে লিখুন — বলবেন:
+  "ফোন করুন {{PHONE}}, অথবা ওই নম্বরেই হোয়াটসঅ্যাপে লিখুন — বলবেন:
    কান পরীক্ষার সিরিয়াল লাগবে, [যেদিন-যে সময় আসতে চান]।"
 
 Fill the bracket with what they already told you.

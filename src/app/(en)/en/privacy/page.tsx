@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import PrivacyView from "@/components/views/PrivacyView";
-import { altLanguages, SITE } from "@/lib/site";
+import { altLanguages } from "@/lib/site";
 import { getDict } from "@/routes/dict";
+import { pageOpenGraph } from "@/lib/seo";
 
 export const revalidate = 86400;
 
@@ -14,7 +15,10 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: "/en/privacy",
       languages: altLanguages("/gopaniyota", "/en/privacy"),
     },
-    openGraph: { title: d.seo.privacyTitle, url: `${SITE.url}/en/privacy` },
+    openGraph: await pageOpenGraph("en", d, {
+      title: d.seo.privacyTitle,
+      path: "/en/privacy",
+    }),
   };
 }
 

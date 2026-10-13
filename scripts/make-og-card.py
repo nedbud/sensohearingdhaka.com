@@ -24,8 +24,24 @@ Fonts come from the system (fonts-anek-bangla). The site loads the same family
 over the web, so the card and the page it opens are set in one typeface.
 """
 import pathlib
+import re
 
 from PIL import Image, ImageDraw, ImageFont
+
+
+def phone_display() -> str:
+    """The primary number, read out of src/lib/site.ts.
+
+    Not typed here. This script bakes the number into a PNG, and a PNG is the
+    one copy that cannot be grepped and that nobody notices has gone stale --
+    the card went out with a wrong number on it for weeks. Reading the TypeScript
+    constant means the card is wrong only if the site is wrong.
+    """
+    site = pathlib.Path(__file__).resolve().parent.parent / "src" / "lib" / "site.ts"
+    m = re.search(r'const PHONE_PRIMARY = "([^"]+)"', site.read_text(encoding="utf-8"))
+    if not m:
+        raise SystemExit("PHONE_PRIMARY not found in src/lib/site.ts -- was it renamed?")
+    return m.group(1)
 
 # The site's own palette and its own typeface — an OG card that does not look
 # like the page it opens is worse than none.
@@ -98,7 +114,9 @@ img.paste(logo, (pad, 502), logo)
 phone = ImageFont.truetype(L % "700", 40)
 site = ImageFont.truetype(L % "500", 25)
 
-pn = "01322-926297"
+# The number is read from src/lib/site.ts rather than typed: this script
+# writes it into a PNG, which is the one copy nobody notices is stale.
+pn = phone_display()
 b = d.textbbox((0, 0), pn, font=phone)
 d.text((W - pad - (b[2] - b[0]), 508), pn, font=phone, fill=BRAND)
 

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Lang } from "@/lib/i18n";
+import { phoneText } from "@/lib/site";
 import NaatiFace, { type FaceState } from "./NaatiFace";
 import { NAATI_OPEN } from "./AskNaatiButton";
 import { consentRef, recordConsent } from "@/lib/consent";
@@ -44,7 +45,7 @@ const T = {
     remove: "সরান",
     thinking: "লিখছে",
     restart: "নতুন করে শুরু",
-    disclaimer: "নাতি ডাক্তার নয়। জরুরি হলে সরাসরি ফোন করুন ০১৩২২-৯২৬২৯৭।",
+    disclaimer: `নাতি ডাক্তার নয়। জরুরি হলে সরাসরি ফোন করুন ${phoneText("bn")}।`,
     privacy: "গোপনীয়তা",
     consent: "আপনি যা লেখেন তা উত্তর দেওয়ার জন্য পড়া হয়। সিরিয়াল নিতে চাইলে শুধু নাম আর নম্বর লাগবে।",
     photoTitle: "ছবি পাঠানোর আগে একটু জেনে নিন",
@@ -53,7 +54,7 @@ const T = {
     photoAgree: "ঠিক আছে, পাঠাই",
     photoDecline: "বরং লিখে বলি",
     photoNote: "ছবি পড়ার জন্য দেশের বাইরে যায়, জমা রাখা হয় না।",
-    failed: "উত্তর আনতে পারলাম না। আবার চেষ্টা করুন, অথবা ফোন করুন ০১৩২২-৯২৬২৯৭।",
+    failed: `উত্তর আনতে পারলাম না। আবার চেষ্টা করুন, অথবা ফোন করুন ${phoneText("bn")}।`,
     photoAlt: "আপনার পাঠানো ছবি",
   },
   en: {
@@ -67,7 +68,7 @@ const T = {
     remove: "Remove",
     thinking: "typing",
     restart: "Start again",
-    disclaimer: "Naati is not a doctor. If it's urgent, call 01322-926297.",
+    disclaimer: `Naati is not a doctor. If it's urgent, call ${phoneText("en")}.`,
     privacy: "Privacy",
     consent: "What you write here is read in order to answer you. Booking needs only your name and number.",
     photoTitle: "Before you send a photo",
@@ -76,7 +77,7 @@ const T = {
     photoAgree: "That's fine, send it",
     photoDecline: "I'll type it instead",
     photoNote: "Photos are read abroad and never stored.",
-    failed: "I couldn't get an answer. Try again, or call 01322-926297.",
+    failed: `I couldn't get an answer. Try again, or call ${phoneText("en")}.`,
     photoAlt: "The photo you sent",
   },
 } as const;

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { formatTaka, toBengaliDigits } from "@/lib/site";
+import { cityLine, formatTaka, toBengaliDigits } from "@/lib/site";
 import type { Clinic } from "@/routes/clinic";
 import type { Part } from "@/routes/details";
 import { fill, type Lang } from "@/lib/i18n";
@@ -732,9 +732,7 @@ export default function ProductView({
                     stale address while the footer printed the current one. */}
                 {bn ? clinic.address.lineBn : clinic.address.line}
                 <br />
-                {bn
-                  ? `${clinic.address.cityBn}-${clinic.address.postcode}`
-                  : `${clinic.address.city}-${clinic.address.postcode}`}
+                {cityLine(clinic.address, lang)}
               </p>
               <p className="mt-3 text-sm leading-relaxed text-ink-muted">
                 {T("business.hours.open", "শনি – বৃহস্পতি: সকাল ১০টা – রাত ৮টা", "Saturday to Thursday, 10am to 8pm")}

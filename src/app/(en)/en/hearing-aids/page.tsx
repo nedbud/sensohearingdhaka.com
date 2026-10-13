@@ -4,6 +4,7 @@ import { getSeries } from "@/routes/product";
 import { altLanguages } from "@/lib/site";
 import { fill } from "@/lib/i18n";
 import { getDict } from "@/routes/dict";
+import { pageOpenGraph } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -53,7 +54,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       canonical: enPath,
       languages: altLanguages(path, enPath),
     },
-    openGraph: { locale: "en_US" },
+    openGraph: await pageOpenGraph("en", d, { path: "/en/hearing-aids" }),
   };
 }
 

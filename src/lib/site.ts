@@ -2,9 +2,12 @@
  * Everything factual about the business, as supplied by Senso on the
  * information form (returned 31 Aug 2026). Nothing here is guessed.
  *
- * The CMS company-settings endpoint still returns seeder placeholder data
- * (phone "01234567", address "Recusandae Et dolor"), which is why none of
- * this reads from the API.
+ * This file is the source for the contact facts, not the CMS. That was once
+ * because the old CMS's company-settings endpoint returned seeder rubbish
+ * (phone "01234567", address "Recusandae Et dolor"); NedCMS answers that
+ * endpoint from the Business global now, so the reason has expired and the
+ * values should move to the panel — see `getContact` in routes/company.ts
+ * for what that still needs. Until then a number change is a deploy.
  *
  * STILL MISSING from the form — ask before launch:
  *   - email address (left blank; the old site used info@sensohearingdhaka.com)
@@ -13,6 +16,32 @@
  *   - patient testimonials, referring ENT doctors, Google review count
  *   - domain / hosting / Google Business Profile / Search Console access
  */
+
+/**
+ * The numbers, written once.
+ *
+ * On 9 Oct 2026 the clinic said the primary number was wrong — theirs ends
+ * 07, the site said 97 — and correcting it meant changing fourteen literals
+ * in six files. Three of those were in this object alone, where the dialling
+ * form, the printed form and the WhatsApp id were three independent copies of
+ * the same eleven digits.
+ *
+ * A number typed in fourteen places is a number that ends up wrong in one of
+ * them, and the copy that stays wrong is the one nobody is looking at while
+ * they check — here it was an OG image and a rate-limit message.
+ *
+ * So the local form is the only literal and every other form is computed.
+ * Nothing below this line should contain a digit of a phone number.
+ */
+const PHONE_PRIMARY = "01322-926207";
+const PHONE_SECOND = "01805-051278";
+const LANDLINE = "02-9128045";
+
+/** `+8801322926207` — what a `tel:` link and schema.org want. */
+const e164 = (local: string) => `+880${local.replace(/\D/g, "").replace(/^0/, "")}`;
+
+/** `8801322926207` — what wa.me wants: no plus, no dashes. */
+const waId = (local: string) => `880${local.replace(/\D/g, "").replace(/^0/, "")}`;
 
 export const SITE = {
   name: "Senso Hearing Centre",
@@ -50,17 +79,32 @@ export const SITE = {
     landmarkBn: "পান্থপথ / গ্রীনরোড সিগনাল, আজোয়া খাবারের দোকানের পাশের বিল্ডিং",
     floorNote: "Lift to the 4th floor. Parking available.",
     floorNoteBn: "লিফটে ৪ তলা। পার্কিং ব্যবস্থা আছে।",
+    /**
+     * The business listing, not a dropped pin.
+     *
+     * The `!16s%2Fg%2F11fgm6bq_3` on the end is Google's own id for Senso
+     * Hearing Centre, so this opens the place — name, hours, reviews, the
+     * Directions button — rather than a coordinate that happens to be on
+     * the roof. `1e3` asks for satellite: on Panthapath the useful thing is
+     * seeing which building it is, and the shopfront signboard is not on
+     * the street map.
+     *
+     * The `?entry=ttu&g_ep=...` that Google appends when you copy a link is
+     * deliberately not here. Those are session and analytics parameters —
+     * they change every time the link is copied and mean nothing to anyone
+     * who follows it.
+     */
     mapsUrl:
-      "https://www.google.com/maps/place/Senso+Hearing+Centre+Dhaka/@23.7515683,90.3865646,157m/data=!3m1!1e3!4m6!3m5!1s0x3755b9a126444b51:0xd5ea0863ae6b7f8c!8m2!3d23.7515441!4d90.3863803",
+      "https://www.google.com/maps/place/Senso+Hearing+Centre+Dhaka/@23.7515441,90.3857366,271m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3755b9a126444b51:0xd5ea0863ae6b7f8c!8m2!3d23.7515441!4d90.3863803!16s%2Fg%2F11fgm6bq_3",
     geo: { lat: 23.7515441, lng: 90.3863803 },
   },
 
-  phones: ["+8801322926297", "+8801805051278", "+88029128045"],
-  phoneDisplay: "01322-926297",
-  phoneDisplay2: "01805-051278",
+  phones: [e164(PHONE_PRIMARY), e164(PHONE_SECOND), e164(LANDLINE)],
+  phoneDisplay: PHONE_PRIMARY,
+  phoneDisplay2: PHONE_SECOND,
   // Senso gave two WhatsApp numbers; the first is the primary.
-  whatsapp: "8801322926297",
-  whatsappAlt: "8801805051278",
+  whatsapp: waId(PHONE_PRIMARY),
+  whatsappAlt: waId(PHONE_SECOND),
   email: "info@sensohearingdhaka.com", // not given on the form — verify
   /**
    * Not for display. Senso asked for the trade licence number to be taken
@@ -211,9 +255,48 @@ export function formatTaka(value: string | number) {
   return `৳ ${Math.round(n).toLocaleString("en-US")}`;
 }
 
+/**
+ * The number as it is printed, in the script of the page printing it.
+ *
+ * Bangla pages print Bengali digits; the dialling forms never do. This
+ * exists so that no component writes the number out again — three of them
+ * did, in both scripts, which is how six of the fourteen wrong copies came
+ * to be. A component that needs the number calls this.
+ */
+export function phoneText(lang: "bn" | "en", which: 1 | 2 = 1): string {
+  const n = which === 1 ? SITE.phoneDisplay : SITE.phoneDisplay2;
+  return lang === "bn" ? toBengaliDigits(n) : n;
+}
+
 const BN_DIGITS = "০১২৩৪৫৬৭৮৯";
 export function toBengaliDigits(value: string | number) {
   return String(value).replace(/\d/g, (d) => BN_DIGITS[+d]);
+}
+
+/**
+ * "ঢাকা-১২১৫" or "Dhaka-1215".
+ *
+ * Six components built this line by hand — the footer, the visit section, the
+ * About page, the privacy notice, the product page and the old contact
+ * section — and all six of them printed the postcode in Western digits
+ * inside a Bangla address. It read as "ঢাকা-1215": the city in one script,
+ * the number in another, on the line a patient copies into a rickshaw
+ * driver's phone.
+ *
+ * One function, because six copies of a two-line expression is six places
+ * for the seventh to be written differently.
+ *
+ * The structured-data postcode is deliberately NOT built from here. Schema.org
+ * postalCode is read by machines, and Google's local listing has to match the
+ * Business Profile character for character.
+ */
+export function cityLine(
+  address: { city: string; cityBn: string; postcode: string },
+  lang: "bn" | "en"
+): string {
+  return lang === "bn"
+    ? `${address.cityBn}-${toBengaliDigits(address.postcode)}`
+    : `${address.city}-${address.postcode}`;
 }
 
 export type OpenState = {
