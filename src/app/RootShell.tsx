@@ -4,6 +4,7 @@ import Footer from "@/components/partials/footer";
 import { ClinicJsonLd } from "@/components/ui/JsonLd";
 import StickyContactBar from "@/components/ui/StickyContactBar";
 import Analytics from "@/components/ui/Analytics";
+import AppSplash from "@/components/ui/AppSplash";
 // import NaatiWidget from "@/components/naati/NaatiWidget";
 import type { Lang } from "@/lib/i18n";
 import { getSite } from "@/routes/site";
@@ -42,7 +43,7 @@ export default async function RootShell({
   const { clinic, d, details } = await getSite(lang);
 
   return (
-    <html lang={lang}>
+    <html lang={lang} suppressHydrationWarning>
       <head>
         {/* Only the faces that render above the fold. anek-bengali-700 used
             to be preloaded here and is declared in no @font-face at all — it
@@ -57,6 +58,7 @@ export default async function RootShell({
           href="/font/anek-semi-600-bengali.woff2" />
       </head>
       <body suppressHydrationWarning>
+        <AppSplash />
         <Analytics />
         <ClinicJsonLd clinic={clinic} tests={details.tests} />
         <Navbar lang={lang} clinic={clinic} d={d} />

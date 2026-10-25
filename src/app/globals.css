@@ -196,3 +196,45 @@
     scroll-behavior: auto !important;
   }
 }
+
+
+/*
+ * The phone's cold-start splash. See components/ui/AppSplash.tsx.
+ *
+ * Everything here is one keyframe each, with `forwards`, so the cover removes
+ * itself whether or not a line of JavaScript ever runs. `visibility` is what
+ * actually takes it out of the page at the end — opacity alone leaves an
+ * invisible sheet over every tap target.
+ */
+.senso-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  background: #FAF6F0;
+  animation: senso-splash-out 0.26s ease-in 0.42s forwards;
+}
+
+.senso-splash-mark {
+  animation: senso-splash-mark 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.senso-splash-mark img {
+  width: 10.5rem;
+  height: auto;
+}
+
+@keyframes senso-splash-mark {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes senso-splash-out {
+  to { opacity: 0; visibility: hidden; }
+}
+
+/* Asked for less movement: no cover at all, not a faster one. */
+@media (prefers-reduced-motion: reduce) {
+  .senso-splash { display: none; }
+}

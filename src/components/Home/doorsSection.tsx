@@ -54,7 +54,18 @@ export default function DoorsSection({
   ];
 
   return (
-    <section className="mx-auto max-w-6xl px-4 pt-6 lg:px-8">
+    /*
+       The three doors rise into the hero rather than queueing under it.
+
+       The hero used to end on a hairline and the doors began six pixels
+       below it, which read as two pages stacked. Lifting the row so it
+       overlaps the bottom of the picture does the opposite: the eye goes
+       headline, button, doors, in one movement, and the cards look like they
+       are resting on the photograph instead of waiting their turn. They are
+       opaque and on the site's own surface colour, so nothing underneath has
+       to be legible through them.
+    */
+    <section className="relative z-10 mx-auto -mt-10 max-w-6xl px-4 lg:-mt-16 lg:px-8">
       <ul className="grid gap-3 sm:grid-cols-3">
         {doors.map((door) => (
           <li key={door.title}>

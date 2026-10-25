@@ -37,3 +37,8 @@ next-env.d.ts
 .env
 .env.*
 !.env.example
+
+# Files moved aside instead of deleted. The device bridge cannot remove a
+# file in a shared folder, so work that is finished with lands here and the
+# person empties it when they like; none of it belongs in the repository.
+_to_delete/
