@@ -41,6 +41,23 @@ export const BASE = (process.env.NEXT_PUBLIC_BASE_URL ?? "").replace(/\/+$/, "")
  * a working day and should appear the same day; the privacy notice and the
  * team change a few times a year.
  */
+/**
+ * The one tag every CMS read carries.
+ *
+ * `CACHE` below is the ceiling — how long a value may sit there if nobody
+ * says otherwise. This is how somebody says otherwise: the panel POSTs to
+ * `/api/revalidate` the moment it writes, that route drops this tag, and the
+ * next visitor gets the new price.
+ *
+ * One tag rather than one per endpoint, on purpose. This site has a handful
+ * of pages reading a handful of endpoints, and a per-endpoint map is a list
+ * somebody has to extend every time a section is added — the day it is
+ * forgotten, one corner of the site is stale and nothing says so. Dropping
+ * everything costs a few extra reads from a CMS on the same machine, which
+ * is a cheaper mistake than a wrong price nobody can explain.
+ */
+export const CMS_TAG = "cms";
+
 export const CACHE = {
   /** Anything a person edits and then reloads the site to check. */
   EDITED: 3600,
@@ -69,7 +86,7 @@ export async function getJson<T>(
   const url = `${BASE}${path}`;
 
   try {
-    const res = await fetch(url, { next: { revalidate } });
+    const res = await fetch(url, { next: { revalidate, tags: [CMS_TAG] } });
 
     if (!res.ok) {
       warn(`${url} -> HTTP ${res.status}`);
