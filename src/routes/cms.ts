@@ -34,6 +34,54 @@ import type { Lang } from "@/lib/i18n";
 export const BASE = (process.env.NEXT_PUBLIC_BASE_URL ?? "").replace(/\/+$/, "");
 
 /**
+ * Where the CMS's pictures should be asked for, if not from the CMS.
+ *
+ * ## The measurement behind this
+ *
+ * Once the carousel stopped shipping its own artwork, the largest thing on
+ * the home page started arriving from `cms.sensohearingdhaka.com` instead of
+ * from this site. Measured on the live site: the stylesheet 20ms, the first
+ * script 20ms, a 71KB font 43ms — and the hero photograph **3,162ms**. Same
+ * machine, same nginx. The difference is that it is a second origin: its own
+ * DNS, its own TCP, its own TLS, its own connection limit, and none of the
+ * cache headers the site's own files now carry.
+ *
+ * A `preconnect` shortens the handshake and does nothing about the rest.
+ *
+ * ## What this does
+ *
+ * When `NEXT_PUBLIC_CMS_MEDIA_PATH` is set, a picture URL on the CMS origin
+ * is rewritten to that path on this site, and nginx proxies it across. The
+ * browser then fetches it on the connection it already has, and it is cached
+ * like everything else here.
+ *
+ * ## Why it is a switch and not simply done
+ *
+ * Because it only works if nginx has the matching `location`. Shipping it
+ * unconditionally would mean the deploy that carries this code breaks every
+ * picture on the site until somebody edits a config file on a server. Unset,
+ * every URL passes through untouched and nothing changes.
+ */
+const MEDIA_PATH = (process.env.NEXT_PUBLIC_CMS_MEDIA_PATH ?? "").replace(/\/+$/, "");
+
+/** The CMS's own prefix for a stored file, which is Payload's and not ours. */
+const CMS_FILES = "/api/media/file/";
+
+export function sameOrigin(url: string): string;
+export function sameOrigin(url: string | null | undefined): string | undefined;
+export function sameOrigin(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  if (!MEDIA_PATH || !BASE) return url;
+
+  // Only pictures, and only the CMS's. Anything else — an absolute URL to
+  // somewhere entirely different, a path that is already ours — is left as
+  // it is rather than guessed at.
+  if (!url.startsWith(`${BASE}${CMS_FILES}`)) return url;
+
+  return `${MEDIA_PATH}/${url.slice(`${BASE}${CMS_FILES}`.length)}`;
+}
+
+/**
  * How long a kind of content may be stale.
  *
  * Named rather than written as `3600` at each call site: the number says
