@@ -7,9 +7,21 @@ import Script from "next/script";
  * measurement ID in it, and nothing in the codebase ever read it — so the
  * site has been running with no analytics at all, while looking configured.
  *
- * `afterInteractive` rather than `beforeInteractive`: nothing on the page
- * waits for this, and the people this site is built for are on Bangladeshi
- * mobile data. Measurement should not cost them the first paint.
+ * `lazyOnload`, which is further back than it looks.
+ *
+ * It was `afterInteractive`, on the reasoning that nothing on the page waits
+ * for this. True, and not enough: that strategy still fetches during the page
+ * load, and gtag.js is 181 KiB — the largest single file this site loads,
+ * larger than the stylesheet and every first-party script together. On a
+ * 1.6 Mbit connection it competes for bandwidth with the hero photograph,
+ * which is the Largest Contentful Paint. Lighthouse priced it at 61 KiB of
+ * unused JavaScript and 600ms.
+ *
+ * `lazyOnload` waits for the browser to go idle, so measurement is paid for
+ * out of the quiet after the page is usable rather than out of the visitor's
+ * first few seconds. The page_view arrives a moment later; GA is built for
+ * that. The people this site is for are on Bangladeshi mobile data, and
+ * measuring them should not be the most expensive thing on the page.
  *
  * What is deliberately NOT here:
  *
@@ -30,9 +42,9 @@ export default function Analytics() {
     <>
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
-      <Script id="ga4" strategy="afterInteractive">
+      <Script id="ga4" strategy="lazyOnload">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
