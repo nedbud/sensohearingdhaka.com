@@ -29,6 +29,21 @@ import { getSite } from "@/routes/site";
  * than a client transition. For a language switch that is the honest
  * behaviour anyway — the document language really is changing.
  */
+/**
+ * Where the CMS lives, as an origin and nothing more.
+ *
+ * `NEXT_PUBLIC_BASE_URL` is the whole URL the site reads content from; a
+ * preconnect wants only the scheme and host. An unset or malformed value
+ * gives an empty string rather than throwing a layout off a bad env var.
+ */
+const CMS_ORIGIN = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_BASE_URL ?? "").origin;
+  } catch {
+    return "";
+  }
+})();
+
 export default async function RootShell({
   lang,
   children,
@@ -45,6 +60,23 @@ export default async function RootShell({
   return (
     <html lang={lang} suppressHydrationWarning>
       <head>
+        {/* The CMS is a second origin, and since the carousel stopped
+            shipping its own pictures it is the origin the largest thing on
+            the page comes from. Without this, the browser only learns it
+            has to go there when it reaches the <img> — and then pays DNS,
+            TCP and TLS before a byte of the photograph moves. Lighthouse
+            prices that at about 150ms on a phone; on a bad connection it
+            is the difference between a hero and a grey rectangle.
+
+            `preconnect` does the handshake early; `dns-prefetch` is the
+            fallback for browsers that ignore a preconnect budget. Both are
+            harmless if the page turns out to need neither. */}
+        {CMS_ORIGIN && (
+          <>
+            <link rel="preconnect" href={CMS_ORIGIN} crossOrigin="anonymous" />
+            <link rel="dns-prefetch" href={CMS_ORIGIN} />
+          </>
+        )}
         {/* Only the faces that render above the fold. anek-bengali-700 used
             to be preloaded here and is declared in no @font-face at all — it
             was downloaded on every page and never drawn with. These three are

@@ -119,6 +119,52 @@ export default function HeroSlider({
   const band = useRef<HTMLElement>(null);
   const many = slides.length > 1;
 
+  /**
+   * Which slides are allowed to fetch their photograph.
+   *
+   * `loading="lazy"` was already on every slide but the first and it did
+   * nothing. All seven sit at `absolute inset-0`, so all seven are inside
+   * the viewport and merely transparent — the browser defers what is off
+   * screen, not what is invisible. A phone downloaded seven full-bleed
+   * plates before it had painted one, which is most of what a Speed Index
+   * of 10.6s is made of.
+   *
+   * So the markup decides instead of the loading attribute. Slide one
+   * renders with the page; its neighbour is warmed 1.2s later, well inside
+   * the seven seconds before the band moves; after that each slide warms
+   * the one behind it as soon as it arrives. Nothing is ever shown
+   * unloaded, and somebody who reads the first slide and taps WhatsApp
+   * fetches one picture instead of seven.
+   */
+  const [warm, setWarm] = useState<readonly number[]>([0]);
+  const warmUp = useCallback(
+    (want: number) =>
+      setWarm((had) => {
+        const i = ((want % slides.length) + slides.length) % slides.length;
+        return had.includes(i) ? had : [...had, i];
+      }),
+    [slides.length]
+  );
+
+  useEffect(() => {
+    warmUp(index);
+  }, [index, warmUp]);
+
+  /**
+   * The slide behind this one.
+   *
+   * Delayed on the first slide only, so the hero's own photograph is not
+   * competing with the next one for the first second of the page. Every
+   * later move warms its neighbour at once — by then the page is loaded and
+   * the person is reading, and a slide that is not ready when the band
+   * turns shows paper.
+   */
+  useEffect(() => {
+    if (!many) return;
+    const id = window.setTimeout(() => warmUp(index + 1), index === 0 ? 1200 : 0);
+    return () => window.clearTimeout(id);
+  }, [index, many, warmUp]);
+
   const prefix = lang === "en" ? "/en" : "";
   const minutes =
     lang === "bn"
@@ -329,20 +375,21 @@ export default function HeroSlider({
                 for an optimiser to do. `fetchPriority` on the first slide is
                 what next/image's `priority` was doing.
               */}
-              <picture>
-                <source media="(min-width: 1024px)" srcSet={slide.image} />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={slide.portrait ?? slide.image}
-                  alt={slideText(slide.alt, lang, d.hero.deviceAlt)}
-                  width={1080}
-                  height={2160}
-                  decoding="async"
-                  loading={i === 0 ? "eager" : "lazy"}
-                  fetchPriority={i === 0 ? "high" : "low"}
-                  className="absolute inset-0 h-full w-full object-cover object-top lg:object-[88%_50%]"
-                />
-              </picture>
+              {warm.includes(i) && (
+                <picture>
+                  <source media="(min-width: 1024px)" srcSet={slide.image} />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={slide.portrait ?? slide.image}
+                    alt={slideText(slide.alt, lang, d.hero.deviceAlt)}
+                    width={1080}
+                    height={2160}
+                    decoding="async"
+                    fetchPriority={i === 0 ? "high" : "low"}
+                    className="absolute inset-0 h-full w-full object-cover object-top lg:object-[88%_50%]"
+                  />
+                </picture>
+              )}
             </div>
 
             {/* The pictures already fade to paper where the words go. These
