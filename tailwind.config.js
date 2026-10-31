@@ -9,7 +9,17 @@ module.exports = {
         // a loud red used everywhere reads as alarm, which is the wrong
         // feeling for a clinic.
         brand: { DEFAULT: "#B4231C", deep: "#7C1712", tint: "#F7E7DF", raw: "#CA0508" },
-        ink: { DEFAULT: "#221F1B", 2: "#5C554C", muted: "#8A8177", inverse: "#F7F1E8" },
+        // `muted` was #8A8177, which is 3.55:1 on paper and 3.77:1 on
+        // paper-surface — under AA's 4.5:1, and the single cause of all
+        // thirty-four contrast failures Lighthouse reported. #6F675E clears
+        // it on every light surface the site has: 5.16 on paper, 5.48 on
+        // paper-surface, 4.58 on paper-2.
+        //
+        // It costs some of the gap between ink-2 and muted — the grey ladder
+        // is tighter than it was. That is the right side to lose on for a
+        // clinic whose readers are largely 55+, which is the same reason
+        // body copy here never goes below 18px.
+        ink: { DEFAULT: "#221F1B", 2: "#5C554C", muted: "#6F675E", inverse: "#F7F1E8" },
         paper: { DEFAULT: "#FAF6F0", surface: "#FFFDFA", 2: "#F1E8DC", deep: "#201C18" },
         line: { DEFAULT: "#E3D8C8", strong: "#CBBCA6", dark: "#332C25" },
         open: { DEFAULT: "#0E6B4E", tint: "#E4F1EC" },

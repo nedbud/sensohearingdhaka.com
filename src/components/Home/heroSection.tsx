@@ -43,7 +43,17 @@ export default function Hero({
 }) {
   return (
     <section>
-      <HeroSlider lang={lang} clinic={clinic} d={d} slides={slides} />
+      {/* No slides, no band.
+
+          The carousel is the panel's now, with nothing shipped behind it, so
+          an empty carousel screen has to be allowed to look empty. Drawing
+          the slider anyway would give the page a full-screen blank — the
+          band is `h-[100svh]` — which reads as a broken site rather than an
+          unfilled one. Leaving it out puts the three doors at the top until
+          somebody adds a slide, which is plain and not wrong. */}
+      {slides.length > 0 && (
+        <HeroSlider lang={lang} clinic={clinic} d={d} slides={slides} />
+      )}
 
       {/* The three doors sit directly under the hero, before the figures:
           they are the navigation, and the strip is the supporting detail. */}

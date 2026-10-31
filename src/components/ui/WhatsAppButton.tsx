@@ -58,7 +58,20 @@ export default function WhatsAppButton({
       className={`inline-flex items-center justify-center rounded-full border-[1.5px] border-brand bg-brand py-1.5 font-ui leading-tight text-white transition-colors hover:border-brand-deep hover:bg-brand-deep focus-visible:outline focus-visible:outline-2 ${box} ${className}`}
     >
       <WhatsAppIcon className={size === "large" ? "h-6 w-6" : "h-5 w-5"} />
-      <span className={size === "compact" ? "hidden sm:inline" : undefined}>
+      {/* `sr-only` and not `hidden`, which is the whole point.
+
+          The compact button drops its label on a phone and keeps the icon,
+          and the icon is aria-hidden — so the site's primary action had no
+          accessible name at exactly the width where almost everybody uses
+          it. A screen reader announced "link", and voice control had nothing
+          to say to it.
+
+          `sr-only` takes the label out of the flow rather than out of the
+          document, so it looks the same and reads as "WhatsApp-এ লিখুন".
+          One string, no aria-label repeating it a second time. */}
+      <span
+        className={size === "compact" ? "sr-only sm:not-sr-only sm:inline" : undefined}
+      >
         {text}
       </span>
     </a>

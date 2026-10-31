@@ -74,11 +74,26 @@ export default function FactStrip({
        which is both readable and shorter than three stacked blocks. */
     <dl className="grid grid-cols-1 divide-y divide-line rounded-xl border border-line bg-paper-surface sm:grid-cols-3 sm:divide-x sm:divide-y-0">
       {facts.map((fact) => (
+        /* Grid rather than flex, and the two <dd>s placed by hand.
+
+           They used to sit inside a wrapper <div> so they would stack to the
+           right of the label on a phone. That div is not allowed where it
+           was: a <dl> may hold <dt>/<dd> pairs or <div>s wrapping a pair,
+           and nothing else — so a <div> between the group and its <dd>s
+           breaks the list for a screen reader, which is the whole reason
+           this markup is a <dl> and not three <span>s. Lighthouse failed it
+           on both counts.
+
+           Explicit column and row starts do the same job with no extra
+           element: the label takes the left column and the first row, so it
+           still shares a baseline with the figure, and the note sits under
+           the figure. On `sm` the group goes back to `block` and the
+           placements fall away. */
         <div
           key={fact.label}
-          className="flex items-baseline justify-between gap-3 px-4 py-2.5 sm:block sm:px-4 sm:py-3"
+          className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-3 px-4 py-2.5 sm:block sm:px-4 sm:py-3"
         >
-          <dt className="flex min-w-0 items-center gap-1.5 text-xs font-medium text-ink-muted">
+          <dt className="col-start-1 row-start-1 flex min-w-0 items-center gap-1.5 text-xs font-medium text-ink-muted">
             {fact.status && (
               <span
                 className={`h-1.5 w-1.5 shrink-0 rounded-full ${
@@ -88,12 +103,12 @@ export default function FactStrip({
             )}
             {fact.label}
           </dt>
-          <div className="shrink-0 text-right sm:text-left">
-            <dd className="num font-ui text-base font-bold leading-tight text-ink sm:mt-0.5 sm:text-lg">
-              {fact.value}
-            </dd>
-            <dd className="text-xs text-ink-muted sm:text-xs">{fact.note}</dd>
-          </div>
+          <dd className="num col-start-2 row-start-1 text-right font-ui text-base font-bold leading-tight text-ink sm:mt-0.5 sm:text-left sm:text-lg">
+            {fact.value}
+          </dd>
+          <dd className="col-start-2 row-start-2 text-right text-xs text-ink-muted sm:text-left">
+            {fact.note}
+          </dd>
         </div>
       ))}
     </dl>
