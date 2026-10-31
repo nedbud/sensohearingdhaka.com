@@ -6,7 +6,7 @@
  * slider does the same rather than showing a blank band.
  */
 import type { Lang } from "@/lib/i18n";
-import { CACHE, getData, sayOr, type Pair } from "@/routes/cms";
+import { CACHE, getData, sayOr, type Pair, sameOrigin } from "@/routes/cms";
 
 export type Slide = {
   image: string;
@@ -82,8 +82,11 @@ export async function getSlides(): Promise<Slide[]> {
   const slides = api
     .filter((s) => s.image)
     .map((s) => ({
-      image: s.image as string,
-      portrait: s.portrait || undefined,
+      // Through this site rather than straight at the CMS, where that is
+      // switched on — see `sameOrigin`. The hero photograph is the page's
+      // largest element and was taking 3.2s from the other origin.
+      image: sameOrigin(s.image as string),
+      portrait: sameOrigin(s.portrait),
       alt: s.alt ?? { bn: null, en: null },
       eyebrow: s.eyebrow ?? { bn: null, en: null },
       title: s.title ?? { bn: null, en: null },

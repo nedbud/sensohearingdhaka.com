@@ -34,6 +34,17 @@ ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 ARG NEXT_PUBLIC_GTM
 ENV NEXT_PUBLIC_GTM=$NEXT_PUBLIC_GTM
 
+# Where the CMS's pictures are fetched from. Unset, they are fetched from the
+# CMS directly, as they always were. Set to a path on this site — /cms-media —
+# the site asks itself for them and nginx proxies them across, so the hero
+# photograph arrives on the connection the browser already has instead of
+# opening a second origin for it. Measured on the live site before this: the
+# stylesheet 20ms, a 71KB font 43ms, the hero photograph 3,162ms.
+#
+# Only set it where nginx has the matching location, or every picture 404s.
+ARG NEXT_PUBLIC_CMS_MEDIA_PATH
+ENV NEXT_PUBLIC_CMS_MEDIA_PATH=$NEXT_PUBLIC_CMS_MEDIA_PATH
+
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # The build fetches the product list and the site copy from the CMS in order to
