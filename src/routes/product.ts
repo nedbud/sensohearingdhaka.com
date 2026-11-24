@@ -47,6 +47,9 @@ export interface ProductMapInterface {
    */
   coverage?: string | null;
   warranty?: string | null;
+  /** The figure, so this site can word it. The string above is the CMS's
+   *  own English and is only read when an older panel sends nothing else. */
+  warranty_years?: number | null;
   form_factor?: string | null;
   power_class?: string | null;
   battery_type?: string | null;
@@ -186,6 +189,7 @@ export interface ProductInterface {
     brand: string;
     series: string;
     warranty: string;
+    warranty_years?: number | null;
     price: string;
     coverage: string;
     avatar: string;

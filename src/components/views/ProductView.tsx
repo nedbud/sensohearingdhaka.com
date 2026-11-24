@@ -397,9 +397,36 @@ export default function ProductView({
           },
         ]
       : []),
-    ...(product.warranty
-      ? [{ label: T("spec.warranty", "ওয়ারেন্টি", "Warranty"), value: product.warranty }]
-      : []),
+    /**
+     * The years, worded here.
+     *
+     * This row printed `product.warranty` straight from the API, and the
+     * API's own words are English — "2 years" — so a Bangla table read
+     * ব্র্যান্ড, সিরিজ, গড়ন, and then "2 Years". The figures strip five
+     * lines above has always done it properly, with `{years} বছর` and
+     * Bengali numerals, so the page was contradicting itself on one screen.
+     *
+     * The device's own number wins; the clinic's default covers a device
+     * that does not carry one; and the API's English string is read only
+     * when both are missing, which happens when the panel has not been
+     * deployed since this was written.
+     */
+    ...(() => {
+      const years = product.warranty_years ?? clinic.warranty.years ?? null;
+      if (years !== null) {
+        return [
+          {
+            label: T("spec.warranty", "ওয়ারেন্টি", "Warranty"),
+            value: fill(T("device.warrantyYears", "{years} বছর", "{years} years"), {
+              years: num(years),
+            }),
+          },
+        ];
+      }
+      return product.warranty
+        ? [{ label: T("spec.warranty", "ওয়ারেন্টি", "Warranty"), value: product.warranty }]
+        : [];
+    })(),
     {
       label: T("spec.service", "সার্ভিস", "Service"),
       value: T(
